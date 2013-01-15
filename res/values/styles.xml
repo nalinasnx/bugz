@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme">
+        <item name="android:windowTitleSize">50dip</item>
+    </style>
+
+</resources>
