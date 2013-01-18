@@ -95,15 +95,50 @@ public class Bugzilla {
 
         try
         {
-            BugSearch.SearchQuery searchQ = new BugSearch.SearchQuery(
-                    BugSearch.SearchLimiter.OWNER, assignedTo);
-            BugSearch search = new BugSearch(searchQ);
+        	BugzillaSearch search = new BugzillaSearch();
+        	
+        	search.addParameter("assigned_to", assignedTo);
 
             mBugzilla.executeMethod(search);
+            
             return (ArrayList<Bug>) search.getSearchResults();
             
         } catch (BugzillaException e)
         {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    ArrayList<Bug> searchBugs(ArrayList<QueryConstraint> constraints) {
+
+    	if (!isConnected())
+    		return null;
+        Log.d(TAG, "searchBugs");
+        // ArrayList<Bug> bugs = new ArrayList<Bug>();
+        //
+        // Map<String, Object> bugData = new HashMap<String, Object>();
+        // BugFactory factory = new BugFactory();
+        //
+        // bugData.put("id", 12386);
+        // bugData.put("product", "product 1");
+        // bugData.put("component", "component 1");
+        // bugData.put("summary", "summary 1");
+        // bugData.put("version", "version 1");
+        // Bug bug = factory.createBug(bugData);
+        // bugs.add(bug);
+        // return bugs;
+
+        try
+        {
+        	BugzillaSearch search = new BugzillaSearch(constraints);
+
+            mBugzilla.executeMethod(search);
+            
+            return (ArrayList<Bug>) search.getSearchResults();
+            
+        } catch (BugzillaException e) {
             e.printStackTrace();
         }
 

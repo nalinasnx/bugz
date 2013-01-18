@@ -42,24 +42,32 @@ public class BugzillaProcessor {
         callback.requestComplete(0);
     }
 
-    public void runQuery(BugzillaApplication app, long queryId, BugzillaProcessorCallback callback) {
+    public void runQuery(BugzillaApplication app, long queryId, boolean updateResults, BugzillaProcessorCallback callback) {
 
         //if (query.idValid == false)
         //    return;
         
         ContentResolver resolver = app.getContentResolver();
+        
+        if (updateResults) {
+        	
+	        /* delete any existing records in "results" table */
+	        resolver.delete(ContentUris.withAppendedId(BugzillaProvider.URI_DELETE_RESULTS, queryId), null,
+	                null);
+        } else {
 
-        // before running the query, check the database to see if the
-        // results table contains any records for the input
-        // query, if so, do nothing
-        Cursor resultCursor = resolver.query(
-                ContentUris.withAppendedId(BugzillaProvider.URI_GET_RESULTS_COUNT, queryId), null,
-                null, null, null);
-        resultCursor.moveToFirst();
-        int count = resultCursor.getInt(0);
-        if (count > 0) {
-            callback.requestComplete(0);
-            return;
+	        // before running the query, check the database to see if the
+	        // results table contains any records for the input
+	        // query, if so, do nothing
+	        Cursor resultCursor = resolver.query(
+	                ContentUris.withAppendedId(BugzillaProvider.URI_GET_RESULTS_COUNT, queryId), null,
+	                null, null, null);
+	        resultCursor.moveToFirst();
+	        int count = resultCursor.getInt(0);
+	        if (count > 0) {
+	            callback.requestComplete(0);
+	            return;
+	        }
         }
         
         /* get query definition from database */
@@ -68,10 +76,18 @@ public class BugzillaProcessor {
                 null, null, null);
         queryCursor.moveToFirst();
         
-        String assignedTo = queryCursor.getString(queryCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE));
+        ArrayList<QueryConstraint> constraints = new ArrayList<QueryConstraint>();
+        
+        String value = queryCursor.getString(queryCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE));
+        if (value != null && !value.isEmpty())
+        	constraints.add(new QueryConstraint(BugzillaDatabase.FIELD_NAME_ASSIGNEE, value));
+        
+        value = queryCursor.getString(queryCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS));
+        if (value != null && !value.isEmpty())
+        	constraints.add(new QueryConstraint(BugzillaDatabase.FIELD_NAME_STATUS, value));
 
         Bugzilla bugzilla = app.getBugzilla();
-        ArrayList<Bug> bugs = bugzilla.searchBugs(assignedTo);
+        ArrayList<Bug> bugs = bugzilla.searchBugs(constraints);
 
         /* delete any existing records in "results" table */
         resolver.delete(ContentUris.withAppendedId(BugzillaProvider.URI_DELETE_RESULTS, queryId), null,

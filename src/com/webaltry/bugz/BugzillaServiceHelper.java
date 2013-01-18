@@ -56,16 +56,14 @@ public class BugzillaServiceHelper {
         appContext.startService(intent);
     }
 
-    public void runQuery(long queryId) {
+    public void runQuery(long queryId, boolean updateResults) {
 
         Log.d(TAG, "runQuery");
 
-        if (mRunningQueries.contains(queryId)) {
+        if (mRunningQueries.contains(queryId))
             return;
-        }
 
-        /* generate id for service request */
-        mRunningQueries.add(queryId);
+         mRunningQueries.add(queryId);
 
         /* create receiver of results from service */
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -81,6 +79,7 @@ public class BugzillaServiceHelper {
         Intent intent = new Intent(appContext, BugzillaService.class);
         intent.putExtra(BugzillaService.SERVICE_TASK, BugzillaService.SERVICE_TASK_RUN_QUERY);
         intent.putExtra(BugzillaService.SERVICE_QUERY_ID, queryId);
+        intent.putExtra(BugzillaService.SERVICE_UPDATE_RESULTS, updateResults);
         intent.putExtra(BugzillaService.SERVICE_CALLBACK, serviceCallback);
 
         /* request service */

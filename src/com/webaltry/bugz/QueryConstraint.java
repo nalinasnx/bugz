@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class QueryConstraint implements Parcelable {
     public String field;
     public String value;
-
+    
     @Override
     public int describeContents() {
         // TODO Auto-generated method stub

@@ -34,9 +34,11 @@ public class LoginActivity extends PreferenceActivity {
             public void onClick(View v) {
                 
                 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                String loginServer = prefs.getString("connection.server", "");
-                String loginUser = prefs.getString("connection.username", "");
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(LoginActivity.this);
+				
+              String loginServer = prefs.getString("connection.server", "");
+              String loginUser = prefs.getString("connection.username", "");
               String loginPassword = prefs.getString("connection.password", "");
 
               BugzillaApplication app = (BugzillaApplication) getApplication();

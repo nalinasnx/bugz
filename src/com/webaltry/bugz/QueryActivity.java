@@ -27,10 +27,12 @@ public class QueryActivity extends Activity {
         final TextView queryName = (TextView) findViewById(R.id.queryName);
         final TextView queryDescription = (TextView) findViewById(R.id.queryDescription);
         final TextView queryAssignee = (TextView) findViewById(R.id.queryAssignee);
+        final TextView queryStatus = (TextView) findViewById(R.id.queryStatus);
         
         queryName.setText("My First Query");
         queryDescription.setText("This query rocks!");
-        
+        queryAssignee.setText("");
+       
 
         titleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -40,8 +42,14 @@ public class QueryActivity extends Activity {
                 Query query = new Query();
                 query.name = queryName.getText().toString();
                 query.description = queryDescription.getText().toString();
-                query.constraints.add(new QueryConstraint("assigned_to", queryAssignee.getText()
-                        .toString()));
+                
+                String value = queryAssignee.getText().toString();
+                if (!value.isEmpty())
+                	query.constraints.add(new QueryConstraint(BugzillaDatabase.FIELD_NAME_ASSIGNEE, value));
+                
+                value = queryStatus.getText().toString();
+                if (queryStatus.length() > 0)
+                	query.constraints.add(new QueryConstraint(BugzillaDatabase.FIELD_NAME_STATUS, value));
 
                 BugzillaApplication app = (BugzillaApplication) getApplication();
                 BugzillaServiceHelper helper = app.getBugzillaServiceHelper();

@@ -36,7 +36,7 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
     private static final String FIELD_NAME_CREATOR = "creator";
     private static final String FIELD_NAME_CREATED = "creation_time";
     private static final String FIELD_NAME_MODIFIED = "last_change_time";
-    private static final String FIELD_NAME_STATUS = "status";
+    public static final String FIELD_NAME_STATUS = "status";
     private static final String FIELD_NAME_PRIORITY = "priority";
     private static final String FIELD_NAME_RESOLUTION = "resolution";
 

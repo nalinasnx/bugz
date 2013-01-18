@@ -16,6 +16,7 @@ public class BugzillaService extends IntentService {
     public static final String SERVICE_TASK = "com.webaltry.bugz.service.task";
     public static final String SERVICE_QUERY = "com.webaltry.bugz.service.query";
     public static final String SERVICE_QUERY_ID = "com.webaltry.bugz.service.queryid";
+    public static final String SERVICE_UPDATE_RESULTS = "com.webaltry.bugz.service.update_results";
     public static final String ORIGINAL_INTENT_EXTRA = "com.webaltry.bugz.service.original_intent_extra";
 
     public static final int SERVICE_TASK_CREATE_QUERY = 1;
@@ -63,7 +64,9 @@ public class BugzillaService extends IntentService {
                         throw new Exception("Query id missing");
                     
                     long queryId = intent.getLongExtra(SERVICE_QUERY_ID, 0);
-                    processor.runQuery(app, queryId, createCallback(intent));
+                    boolean updateResults = intent.getBooleanExtra(SERVICE_UPDATE_RESULTS, false);
+                    
+                    processor.runQuery(app, queryId, updateResults, createCallback(intent));
                     return;
                 }
             }

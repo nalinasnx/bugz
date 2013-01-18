@@ -22,6 +22,8 @@ public class QueriesActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
+        
+        /* configure content with custom title bar */
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.queries);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title); 
@@ -63,7 +65,7 @@ public class QueriesActivity extends ListActivity {
         
         Cursor c = ((SimpleCursorAdapter)l.getAdapter()).getCursor();
         c.moveToPosition(position);
-        int queryId = c.getInt(0);
+        long queryId = c.getLong(0);
         
         //Query query = (Query)mAdapter.getItem(position);
         Intent intent = new Intent(QueriesActivity.this, QueryResultsActivity.class);
