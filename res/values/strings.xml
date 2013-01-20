@@ -10,5 +10,7 @@
     <string name="no_bugs">No Bugs</string>
    <string name="empty"></string>
    <string name="menu_refresh_query">Refresh</string>
-    
+   <string name="edit_query">Edit</string>
+   <string name="delete_query">Delete</string>
+   
 </resources>

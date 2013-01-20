@@ -42,6 +42,30 @@ public class BugzillaProcessor {
         callback.requestComplete(0);
     }
 
+    public void updateQuery(BugzillaApplication app, Query query, BugzillaProcessorCallback callback) {
+        
+        Log.d(TAG, "createQuery");
+        
+        if (query.idValid == false)
+            return;
+
+        /* insert record in "queries" table */
+        ContentResolver resolver = app.getContentResolver();
+        
+        ContentValues values = new ContentValues();
+        values.put(BugzillaDatabase.FIELD_NAME_ID, query.id);
+        values.put(BugzillaDatabase.FIELD_NAME_NAME, query.name);
+        values.put(BugzillaDatabase.FIELD_NAME_DESCRIPTION, query.description);
+        for (QueryConstraint constraint : query.constraints) {
+            values.put(constraint.field, constraint.value);
+        }
+        
+        resolver.update(BugzillaProvider.URI_UPDATE_QUERY, values, null,
+                null);
+
+        callback.requestComplete(0);
+    }
+
     public void runQuery(BugzillaApplication app, long queryId, boolean updateResults, BugzillaProcessorCallback callback) {
 
         //if (query.idValid == false)

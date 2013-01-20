@@ -4,10 +4,13 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -50,6 +53,9 @@ public class QueriesActivity extends ListActivity {
                 new int[] {android.R.id.text1, android.R.id.text2});
         
         setListAdapter(mAdapter);
+        
+        /* register for content menu */
+        registerForContextMenu(getListView());
     }
     
     @Override
@@ -59,6 +65,38 @@ public class QueriesActivity extends ListActivity {
     }
     
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.queries_item, menu);
+    }    
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+     
+        switch (item.getItemId()) {
+            
+            case R.id.edit_query: {
+                
+                Cursor c = ((SimpleCursorAdapter)getListView().getAdapter()).getCursor();
+                c.moveToPosition(info.position);
+                long queryId = c.getLong(0);
+
+                Intent intent = new Intent(QueriesActivity.this, QueryActivity.class);
+                intent.putExtra(QueryActivity.QUERY_ID, queryId);
+
+                startActivity(intent);
+                
+                //quoteResult.remove(info.position);
+                //((StockQuoteAdapter)getListAdapter()).notifyDataSetChanged();
+                return true;
+            }
+        }
+        return false;
+    }    
+    @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         
         super.onListItemClick(l, v, position, id);
@@ -67,8 +105,7 @@ public class QueriesActivity extends ListActivity {
         c.moveToPosition(position);
         long queryId = c.getLong(0);
         
-        //Query query = (Query)mAdapter.getItem(position);
-        Intent intent = new Intent(QueriesActivity.this, QueryResultsActivity.class);
+         Intent intent = new Intent(QueriesActivity.this, QueryResultsActivity.class);
         intent.putExtra(QueryResultsActivity.QUERY_ID, queryId);
         startActivity(intent);
                 
@@ -80,7 +117,8 @@ public class QueriesActivity extends ListActivity {
     	switch (item.getItemId()) {
 
     	case R.id.menu_add_query:
-    		//startActivity(new Intent(this, About.class));
+            Intent intent = new Intent(QueriesActivity.this, QueryActivity.class);
+            startActivity(intent);
     		return true;
     	case R.id.menu_connect:
     		startActivity(new Intent(this, LoginActivity.class));
@@ -92,4 +130,5 @@ public class QueriesActivity extends ListActivity {
     		return super.onOptionsItemSelected(item);
     	}
     }
-}
+    
+ }

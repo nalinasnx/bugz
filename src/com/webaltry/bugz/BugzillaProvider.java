@@ -18,6 +18,9 @@ public class BugzillaProvider extends ContentProvider {
 
     private static final String GET_QUERY = "get_query";
     public static final Uri URI_GET_QUERY = Uri.parse(URI_PREFIX + "/" + GET_QUERY);
+    
+    private static final String UPDATE_QUERY = "update_query";
+   public static final Uri URI_UPDATE_QUERY = Uri.parse(URI_PREFIX + "/" + UPDATE_QUERY);
 
     private static final String GET_ALL_QUERIES = "get_all_queries";
     public static final Uri URI_GET_ALL_QUERIES = Uri.parse(URI_PREFIX + "/" + GET_ALL_QUERIES);
@@ -56,6 +59,7 @@ public class BugzillaProvider extends ContentProvider {
     private static final int CODE_GET_BUG = 107;
     private static final int CODE_DELETE_RESULTS = 108;
     private static final int CODE_GET_ALL_BUGS_OF_QUERY = 109;
+    private static final int CODE_UPDATE_QUERY = 110;
 
     private static final UriMatcher uriMatcher;
     static {
@@ -72,7 +76,8 @@ public class BugzillaProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, DELETE_RESULTS + "/#", CODE_DELETE_RESULTS);
         uriMatcher.addURI(AUTHORITY, GET_ALL_QUERIES, CODE_GET_ALL_QUERIES);
         uriMatcher.addURI(AUTHORITY, GET_ALL_BUGS_OF_QUERY + "/#", CODE_GET_ALL_BUGS_OF_QUERY);
-    }
+        uriMatcher.addURI(AUTHORITY, UPDATE_QUERY, CODE_UPDATE_QUERY);
+   }
 
     private BugzillaDatabase mDatabase;
 
@@ -174,8 +179,23 @@ public class BugzillaProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // TODO Auto-generated method stub
-        return 0;
+
+        switch (uriMatcher.match(uri)) {
+
+            case CODE_UPDATE_QUERY: {
+                /* query the queries table for a specific record */
+               //long queryId = Long.valueOf(uri.getLastPathSegment());
+               // Cursor cursor = mDatabase.updateQuery(queryId, values);
+               // cursor.setNotificationUri(getContext().getContentResolver(), uri);
+              //  return cursor;
+               mDatabase.updateQuery(values);
+                //if (updatedId == 
+                //    throw new IllegalArgumentException("??");
+                return 1;
+            }
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
     }
 
 }

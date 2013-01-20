@@ -22,7 +22,7 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_NAME_RESULTS = "results";
     public static final String TABLE_NAME_BUGS = "bugs";
 
-    private static final String FIELD_NAME_ID = "_id";
+    public static final String FIELD_NAME_ID = "_id";
     public static final String FIELD_NAME_QUERY_ID = "queryId";
     public static final String FIELD_NAME_BUG_ID = "bugId";
 
@@ -191,4 +191,10 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
 
         return db.delete(TABLE_NAME_RESULTS, FIELD_NAME_QUERY_ID + "=" + queryId, null);
     }
+
+    public long updateQuery(ContentValues values) {
+        
+        SQLiteDatabase db = getWritableDatabase();
+        return db.replace(TABLE_NAME_QUERIES, null, values);
+     }
 }

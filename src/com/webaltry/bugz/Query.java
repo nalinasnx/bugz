@@ -46,10 +46,6 @@ public class Query implements Parcelable {
         constraints.add(new QueryConstraint(field, value));
     }
 
-    // public String getName() {
-    // return name;
-    // }
-
     @Override
     public int describeContents() {
         return 0;
@@ -60,6 +56,7 @@ public class Query implements Parcelable {
         out.writeLong(id);
         out.writeByte((byte) (idValid ? 1 : 0));
         out.writeString(name);
+        out.writeString(description);
         out.writeTypedList(constraints);
 
     }
@@ -69,6 +66,7 @@ public class Query implements Parcelable {
         id = in.readLong();
         idValid = in.readByte() != 0;
         name = in.readString();
+        description = in.readString();
         constraints = new ArrayList<QueryConstraint>();
         in.readTypedList(constraints, QueryConstraint.CREATOR);
     }

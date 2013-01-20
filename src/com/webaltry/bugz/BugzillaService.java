@@ -21,6 +21,7 @@ public class BugzillaService extends IntentService {
 
     public static final int SERVICE_TASK_CREATE_QUERY = 1;
     public static final int SERVICE_TASK_RUN_QUERY = 2;
+    public static final int SERVICE_TASK_UPDATE_QUERY = 3;
 
     public BugzillaService() {
         super("BugzillaService");
@@ -69,7 +70,17 @@ public class BugzillaService extends IntentService {
                     processor.runQuery(app, queryId, updateResults, createCallback(intent));
                     return;
                 }
-            }
+                case SERVICE_TASK_UPDATE_QUERY: {
+                    
+                    Log.d(TAG, "SERVICE_TASK_UPDATE_QUERY");
+                    Query query = intent.getParcelableExtra(SERVICE_QUERY);
+                    if (query != null) {
+                        processor.updateQuery(app, query, createCallback(intent));
+                        return;
+                    }
+
+                }
+           }
         } catch (Exception e) {
 
             e.printStackTrace();

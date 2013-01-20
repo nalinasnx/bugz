@@ -56,6 +56,33 @@ public class BugzillaServiceHelper {
         appContext.startService(intent);
     }
 
+    public void updateQuery(Query query) {
+
+        Log.d(TAG, "updateQuery");
+
+        if (!query.getIdValid())
+            throw new IllegalArgumentException("Query already exists");
+
+        /* create receiver of results from service */
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+                handleReponseUpdateQuery(resultCode, resultData);
+            }
+        };
+
+        /* prepare data for service request */
+        Intent intent = new Intent(appContext, BugzillaService.class);
+        intent.putExtra(BugzillaService.SERVICE_TASK, BugzillaService.SERVICE_TASK_UPDATE_QUERY);
+        intent.putExtra(BugzillaService.SERVICE_QUERY, query);
+        intent.putExtra(BugzillaService.SERVICE_CALLBACK, serviceCallback);
+
+        /* request service */
+        appContext.startService(intent);
+    }
+
     public void runQuery(long queryId, boolean updateResults) {
 
         Log.d(TAG, "runQuery");
@@ -134,5 +161,24 @@ public class BugzillaServiceHelper {
                 broadcastManager.sendBroadcast(result);
             }
         }
+    }
+
+    private void handleReponseUpdateQuery(int resultCode, Bundle resultData) {
+
+        Log.d(TAG, "handleReponseUpdateQuery");
+
+//        Intent originalIntent = (Intent) resultData
+//                .getParcelable(BugzillaService.ORIGINAL_INTENT_EXTRA);
+//
+//        if (originalIntent != null) {
+//
+//            Intent result = new Intent(TASK_CREATE_QUERY);
+//
+//            /* broadcast results to activity, if running */
+//            LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(appContext);
+//            if (broadcastManager != null) {
+//                broadcastManager.sendBroadcast(result);
+//            }
+//        }
     }
 }

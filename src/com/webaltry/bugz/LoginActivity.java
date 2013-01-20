@@ -43,19 +43,19 @@ public class LoginActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(LoginActivity.this);
 
-		String value = prefs.getString(PREFERENCE_SERVER, "");
+		String value = prefs.getString(PREFERENCE_SERVER, "https://msaeast.bugz.cvsdude.com/bugz");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginServer);
 			field.setText(value);
 		}
 		
-		value = prefs.getString(PREFERENCE_USER, "");
+		value = prefs.getString(PREFERENCE_USER, "brunsht");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginUser);
 			field.setText(value);
 		}
 		
-		value = prefs.getString(PREFERENCE_PASSWORD, "");
+		value = prefs.getString(PREFERENCE_PASSWORD, "DogHouse");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginPassword);
 			field.setText(value);
