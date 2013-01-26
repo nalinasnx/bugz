@@ -43,19 +43,19 @@ public class LoginActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(LoginActivity.this);
 
-		String value = prefs.getString(PREFERENCE_SERVER, "https://msaeast.bugz.cvsdude.com/bugz");
+		String value = prefs.getString(PREFERENCE_SERVER, "");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginServer);
 			field.setText(value);
 		}
 		
-		value = prefs.getString(PREFERENCE_USER, "brunsht");
+		value = prefs.getString(PREFERENCE_USER, "");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginUser);
 			field.setText(value);
 		}
 		
-		value = prefs.getString(PREFERENCE_PASSWORD, "DogHouse");
+		value = prefs.getString(PREFERENCE_PASSWORD, "");
 		if (value != null) {
 			TextView field = (TextView) findViewById(R.id.loginPassword);
 			field.setText(value);
@@ -107,6 +107,7 @@ public class LoginActivity extends Activity {
 			alert.setTitle("Bugzilla");
 			alert.setMessage("Failed to connect to bugzilla server: \n\n"
 					+ bugz.getErrorMessage());
+			alert.show();
 		} else {
 			finish();
 		}

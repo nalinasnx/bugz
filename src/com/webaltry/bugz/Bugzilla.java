@@ -146,7 +146,7 @@ public class Bugzilla {
     }
 
     boolean isConnected() {
-        return true;// mBugzilla != null;
+        return mBugzilla != null;
     }
 
     void disconnect() {
