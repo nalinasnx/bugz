@@ -59,8 +59,14 @@ public class Bugzilla {
 
             disconnect();
             e.printStackTrace();
-
-            mErrorMessage = e.getMessage();
+            
+            Throwable cause = e.getCause();
+            if (cause != null)
+            	mErrorMessage = cause.getMessage();
+            else
+            	mErrorMessage = e.getMessage();
+            
+            
 
         } catch (Exception e) {
 
@@ -68,6 +74,7 @@ public class Bugzilla {
             e.printStackTrace();
 
             mErrorMessage = e.getMessage();
+            
 
         }
     }
