@@ -2,6 +2,7 @@
 package com.webaltry.bugz;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
 import com.j2bugzilla.rpc.BugSearch;
+import com.j2bugzilla.rpc.GetLegalValues;
 import com.j2bugzilla.rpc.LogIn;
 
 public class Bugzilla {
@@ -22,6 +24,7 @@ public class Bugzilla {
 
     String loginUser;
     private String mErrorMessage;
+    private Set<String> values;
 
     /**
      * @param loginServer
@@ -48,6 +51,15 @@ public class Bugzilla {
             // Bug the_bug = the_bugs.getBug();
             // Map<Object, Object> parameters = the_bug.getParameterMap();
             // String results = (String)parameters.get("creator");
+            
+            GetLegalValues getLegal = new GetLegalValues(GetLegalValues.Fields.STATUS);
+            mBugzilla.executeMethod(getLegal);
+            
+           values = getLegal.getLegalValues();
+            
+            
+            
+            
         } catch (ConnectionException e) {
 
             disconnect();
