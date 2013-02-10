@@ -105,8 +105,15 @@ public class LoginActivity extends Activity {
 		if (!bugz.isConnected()) {
 			AlertDialog alert = new AlertDialog.Builder(this).create();
 			alert.setTitle("Bugzilla");
-			alert.setMessage("Failed to connect to bugzilla server: \n\n"
-					+ bugz.getErrorMessage());
+			
+			String message = "Failed to connect to bugzilla server";
+			String bugzMessage = bugz.getErrorMessage();
+			if (bugzMessage != null) {
+				message += ":\n\n";
+				message += bugzMessage;
+			}
+			
+			alert.setMessage(message);
 			alert.show();
 		} else {
 			finish();

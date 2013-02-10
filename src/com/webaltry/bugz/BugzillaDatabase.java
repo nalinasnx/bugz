@@ -23,22 +23,37 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_NAME_BUGS = "bugs";
 
     public static final String FIELD_NAME_ID = "_id";
-    public static final String FIELD_NAME_QUERY_ID = "queryId";
-    public static final String FIELD_NAME_BUG_ID = "bugId";
-
     public static final String FIELD_NAME_NAME = "name";
     public static final String FIELD_NAME_DESCRIPTION = "description";
-    private static final String FIELD_NAME_COMPONENT = "component";
-    private static final String FIELD_NAME_LAST_RUN = "last_run";
-    private static final String FIELD_NAME_PRODUCT = "product";
+    public static final String FIELD_NAME_QUERY_ID = "queryId";
+    public static final String FIELD_NAME_LAST_RUN = "last_run";
+    
+    // BUGZ: bug_id
+    public static final String FIELD_NAME_BUG_ID = "bugId";	
+    // BUGZ: component
+    public static final String FIELD_NAME_COMPONENT = "component";
+    // BUGZ:
+    public static final String FIELD_NAME_PRODUCT = "product";
+    // BUGZ: short_desc
     public static final String FIELD_NAME_SUMMARY = "summary";
+    // BUGZ: longdesc
+    public static final String FIELD_NAME_COMMENT = "comment";
+    // BUGZ:
     public static final String FIELD_NAME_ASSIGNEE = "assigned_to";
-    private static final String FIELD_NAME_CREATOR = "creator";
-    private static final String FIELD_NAME_CREATED = "creation_time";
-    private static final String FIELD_NAME_MODIFIED = "last_change_time";
+    // BUGZ:
+    public static final String FIELD_NAME_CREATOR = "creator";
+    // BUGZ:
+    public static final String FIELD_NAME_CREATED = "creation_time";
+    // BUGZ:
+    public static final String FIELD_NAME_MODIFIED = "last_change_time";
+    // BUGZ: bug_status
     public static final String FIELD_NAME_STATUS = "status";
-    private static final String FIELD_NAME_PRIORITY = "priority";
-    private static final String FIELD_NAME_RESOLUTION = "resolution";
+    // BUGZ:
+    public static final String FIELD_NAME_PRIORITY = "priority";
+    // BUGZ: bug_severity
+    public static final String FIELD_NAME_SEVERITY = "severity";
+    // BUGZ: resolution
+    public static final String FIELD_NAME_RESOLUTION = "resolution";
 
     private static final String CREATE_TABLE_QUERIES =
             "CREATE TABLE " + TABLE_NAME_QUERIES + " (" +

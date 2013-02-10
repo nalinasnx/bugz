@@ -2,6 +2,7 @@
 package com.webaltry.bugz;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 import android.util.Log;
@@ -20,11 +21,13 @@ public class Bugzilla {
     
     /** for communicating with the bugzilla server */
     private BugzillaConnector mBugzilla;
-    // private TestBugzillaConnector mBugzilla;
-
-    String loginUser;
+   
+    private String mLoginUser;
     private String mErrorMessage;
     private Set<String> values;
+    
+    private Map<String, BugzillaField> mBugzFields;
+   
 
     /**
      * @param loginServer
@@ -36,8 +39,8 @@ public class Bugzilla {
         if (mBugzilla != null)
             mBugzilla = null;
 
-        this.loginUser = loginUser;
-        mErrorMessage = "";
+        mLoginUser = loginUser;
+        mErrorMessage = null;
 
         try
         {
@@ -45,28 +48,23 @@ public class Bugzilla {
             mBugzilla.connectTo(loginServer);
             LogIn logIn = new LogIn(loginUser, loginPassword);
             mBugzilla.executeMethod(logIn);
-
-            // GetBug the_bugs = new GetBug(788);
-            // mBugzilla.executeMethod(the_bugs);
-            // Bug the_bug = the_bugs.getBug();
-            // Map<Object, Object> parameters = the_bug.getParameterMap();
-            // String results = (String)parameters.get("creator");
-            
-            GetLegalValues getLegal = new GetLegalValues(GetLegalValues.Fields.STATUS);
+           
+            BugzillaFields getLegal = new BugzillaFields();
             mBugzilla.executeMethod(getLegal);
             
-           values = getLegal.getLegalValues();
-            
-            
-            
+            mBugzFields = getLegal.getFields();
             
         } catch (ConnectionException e) {
 
             disconnect();
             e.printStackTrace();
-
-            mErrorMessage = e.getMessage();
-
+            
+            Throwable cause = e.getCause();
+            if (cause != null)
+            	mErrorMessage = cause.getMessage();
+            else
+            	mErrorMessage = e.getMessage();
+            
         } catch (BugzillaException e) {
 
             disconnect();
@@ -78,21 +76,21 @@ public class Bugzilla {
             else
             	mErrorMessage = e.getMessage();
             
-            
-
         } catch (Exception e) {
 
             disconnect();
             e.printStackTrace();
-
-            mErrorMessage = e.getMessage();
             
-
-        }
+            Throwable cause = e.getCause();
+            if (cause != null)
+            	mErrorMessage = cause.getMessage();
+            else
+            	mErrorMessage = e.getMessage();
+         }
     }
 
     public String getErrorMessage() {
-        return this.mErrorMessage;
+        return mErrorMessage;
     }
 
     ArrayList<Bug> searchBugs(String assignedTo) {
@@ -174,6 +172,6 @@ public class Bugzilla {
     }
 
     String getUser() {
-        return loginUser;
+        return mLoginUser;
     }
 }
