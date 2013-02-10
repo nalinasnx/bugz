@@ -11,8 +11,11 @@ import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
+import com.j2bugzilla.base.Product;
 import com.j2bugzilla.rpc.BugSearch;
+import com.j2bugzilla.rpc.GetAccessibleProducts;
 import com.j2bugzilla.rpc.GetLegalValues;
+import com.j2bugzilla.rpc.GetProduct;
 import com.j2bugzilla.rpc.LogIn;
 
 public class Bugzilla {
@@ -27,6 +30,7 @@ public class Bugzilla {
     private Set<String> values;
     
     private Map<String, BugzillaField> mBugzFields;
+    private ArrayList<Product> mProducts;
    
 
     /**
@@ -53,6 +57,17 @@ public class Bugzilla {
             mBugzilla.executeMethod(getLegal);
             
             mBugzFields = getLegal.getFields();
+            
+            mProducts = new ArrayList<Product>();
+            GetAccessibleProducts products = new GetAccessibleProducts();
+            mBugzilla.executeMethod(products);
+            int[] ids = products.getProductIDs();
+            for (int id : ids) {
+                GetProduct getProduct = new GetProduct(id);
+                mBugzilla.executeMethod(getProduct);
+                Product product = getProduct.getProduct();
+                mProducts.add(product);
+            }
             
         } catch (ConnectionException e) {
 
