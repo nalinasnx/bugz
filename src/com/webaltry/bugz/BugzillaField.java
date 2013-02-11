@@ -9,7 +9,7 @@ public class BugzillaField {
 	}
 
 	public String bugzName;
-	public ArrayList<String> bugzValues;
+	private ArrayList<String> mBugzValues;
 	public ValueType bugzType;
 	public int bugzId;
 
@@ -53,19 +53,23 @@ public class BugzillaField {
 		if (bugzType == ValueType.DROP_DOWN) {
 			Object[] values = (Object[]) fieldDefinition.get("values");
 			if (values != null) {
-				bugzValues = new ArrayList<String>();
+				mBugzValues = new ArrayList<String>();
 				for (Object value : values) {
 					Map<Object, Object> valueMap = (Map<Object, Object>) value;
 					if (valueMap != null) {
 						String valueName = (String) valueMap.get("name");
 						if (valueName != null) {
 							if (!valueName.isEmpty())
-								bugzValues.add(valueName);
+								mBugzValues.add(valueName);
 						}
 					}
 				}
 			}
 		}
+	}
+	
+	public ArrayList<String> getValues() {
+		return mBugzValues;
 	}
 
 }

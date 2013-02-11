@@ -25,13 +25,10 @@ public class Bugzilla {
     /** for communicating with the bugzilla server */
     private BugzillaConnector mBugzilla;
    
-    private String mLoginUser;
     private String mErrorMessage;
-    private Set<String> values;
-    
     private Map<String, BugzillaField> mBugzFields;
-    private ArrayList<Product> mProducts;
-   
+    private ArrayList<Product> mBugzProducts;
+    private ArrayList<String> mBugzPeople;
 
     /**
      * @param loginServer
@@ -43,22 +40,23 @@ public class Bugzilla {
         if (mBugzilla != null)
             mBugzilla = null;
 
-        mLoginUser = loginUser;
-        mErrorMessage = null;
+         mErrorMessage = null;
 
         try
         {
+        	/* log into bugz */
             mBugzilla = new BugzillaConnector();
             mBugzilla.connectTo(loginServer);
             LogIn logIn = new LogIn(loginUser, loginPassword);
             mBugzilla.executeMethod(logIn);
            
+            /* get field information */
             BugzillaFields getLegal = new BugzillaFields();
             mBugzilla.executeMethod(getLegal);
-            
             mBugzFields = getLegal.getFields();
-            
-            mProducts = new ArrayList<Product>();
+
+            /* get product information */
+            mBugzProducts = new ArrayList<Product>();
             GetAccessibleProducts products = new GetAccessibleProducts();
             mBugzilla.executeMethod(products);
             int[] ids = products.getProductIDs();
@@ -66,7 +64,7 @@ public class Bugzilla {
                 GetProduct getProduct = new GetProduct(id);
                 mBugzilla.executeMethod(getProduct);
                 Product product = getProduct.getProduct();
-                mProducts.add(product);
+                mBugzProducts.add(product);
             }
             
         } catch (ConnectionException e) {
@@ -177,16 +175,49 @@ public class Bugzilla {
         return null;
     }
 
-    boolean isConnected() {
+    public boolean isConnected() {
         return mBugzilla != null;
     }
 
     void disconnect() {
 
         mBugzilla = null;
+        mBugzFields = null;
+        mBugzProducts = null;
+        mBugzPeople = null;
     }
-
-    String getUser() {
-        return mLoginUser;
+    
+    public ArrayList<String> getValues(String field) {
+    	
+    	/* product names handled specially */
+    	if (field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_PRODUCT)) {
+    		
+    		if (mBugzProducts == null)
+    			return null;
+    		
+    		ArrayList<String> products = new ArrayList<String>();
+    		
+            for (Product product : mBugzProducts) {
+            	
+            	products.add(product.getName());
+            }
+		
+    		return products;
+    	}
+    	
+    	/* people names handled specially */
+    	if (field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_ASSIGNEE) || field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_CREATOR)) {
+    		return mBugzPeople;
+    	}
+    	
+    	/* all others come from bugz server */
+    	if (mBugzFields == null)
+    		return null;
+    	
+    	BugzillaField bugzField = mBugzFields.get(field);
+    	if (bugzField == null)
+    		return null;
+    	
+    	return bugzField.getValues();
     }
-}
+ }

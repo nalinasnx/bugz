@@ -103,8 +103,6 @@ public class LoginActivity extends Activity {
 		Bugzilla bugz = app.getBugzilla();
 
 		if (!bugz.isConnected()) {
-			AlertDialog alert = new AlertDialog.Builder(this).create();
-			alert.setTitle("Bugzilla");
 			
 			String message = "Failed to connect to bugzilla server";
 			String bugzMessage = bugz.getErrorMessage();
@@ -113,7 +111,19 @@ public class LoginActivity extends Activity {
 				message += bugzMessage;
 			}
 			
-			alert.setMessage(message);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Bugzilla");
+			builder
+			.setMessage(message)
+			.setCancelable(false)
+			.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int id) {
+					
+				}
+			  });
+			
+			AlertDialog alert = builder.create();
+
 			alert.show();
 		} else {
 			finish();

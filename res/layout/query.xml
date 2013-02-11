@@ -1,80 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
     android:fillViewport="true">
-    
-  <RelativeLayout
+    
+ <RelativeLayout
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:background="#ffffff" >
-      
-    <LinearLayout
-      android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       android:padding="10dip" >
-      
-    <TextView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:text="Name"/>
 
-   <EditText
-       android:id="@+id/queryName"
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:singleLine="true"
-       android:layout_weight="1"/>
-    
-   
-   
-   <TextView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:text="Description"/>
+      <LinearLayout
+          android:id="@+id/linearLayout1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true"
+          android:layout_marginTop="38dp"
+          android:orientation="vertical"
+          android:padding="10dip" >
 
-   <EditText
-       android:id="@+id/queryDescription"
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:singleLine="true"
-       android:layout_weight="1"/>
-    
-   
-   
-   <TextView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:text="Assigned To"/>
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Name" />
 
-   <EditText
-       android:id="@+id/queryAssignee"
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:singleLine="true"
-       android:layout_weight="1"/>
-  
-   
-   
-   <TextView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:text="Status"/>
+          <EditText
+              android:id="@+id/queryName"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:singleLine="true" >
+          </EditText>
 
-   <EditText
-       android:id="@+id/queryStatus"
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:singleLine="true"
-       android:layout_weight="1"/>
-   
-</LinearLayout>
-</RelativeLayout>
+          
+          
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Description" />
+
+          <EditText
+              android:id="@+id/queryDescription"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:singleLine="true" />
+
+          
+          
+              <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Product" />
+         
+          
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1" >
+
+              <MultiAutoCompleteTextView
+                  android:id="@+id/queryProduct"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1.39"
+                  android:ems="10" />
+
+              <com.webaltry.bugz.QueryFieldButton
+                  android:id="@+id/queryProductButton"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="..." 
+                  
+                  />
+              
+          </LinearLayout>
+          
+          
+          
+          
+          
+          
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Assigned To" />
+
+          <EditText
+              android:id="@+id/queryAssignee"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:singleLine="true" />
+
+          
+          
+          
+          
+          
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Status" />
+         
+                    <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1" >
+
+              <MultiAutoCompleteTextView
+                  android:id="@+id/queryStatus"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1.39"
+                  android:ems="10" />
+
+              <com.webaltry.bugz.QueryFieldButton
+                  android:id="@+id/queryStatusButton"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="..." 
+                  
+                  />
+              
+          </LinearLayout>
+
+      </LinearLayout>
+  </RelativeLayout>
     
 </ScrollView>
