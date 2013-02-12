@@ -45,26 +45,28 @@ public class QueryActivity extends Activity {
 
 		final TextView queryName = (TextView) findViewById(R.id.queryName);
 		final TextView queryDescription = (TextView) findViewById(R.id.queryDescription);
+		
+		
+		/* assigned-to */
 		final TextView queryAssignee = (TextView) findViewById(R.id.queryAssignee);
-
 		
-		
-		
+		/* product */
 		final MultiAutoCompleteTextView queryProduct = (MultiAutoCompleteTextView) findViewById(R.id.queryProduct);
-		queryProduct
-				.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-		
+		queryProduct.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 		QueryFieldButton buttonProduct = (QueryFieldButton)findViewById(R.id.queryProductButton);
 		buttonProduct.configure(BugzillaDatabase.FIELD_NAME_PRODUCT, "Select Product", queryProduct);
 		
-		
-		
+		/* status */
 		final MultiAutoCompleteTextView queryStatus = (MultiAutoCompleteTextView) findViewById(R.id.queryStatus);
-		queryStatus
-				.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-		
+		queryStatus.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 		QueryFieldButton buttonStatus = (QueryFieldButton)findViewById(R.id.queryStatusButton);
 		buttonStatus.configure(BugzillaDatabase.FIELD_NAME_STATUS, "Select Status", queryStatus);
+		
+		/* severity */
+		final MultiAutoCompleteTextView querySeverity = (MultiAutoCompleteTextView) findViewById(R.id.querySeverity);
+		queryStatus.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+		QueryFieldButton buttonSeverity = (QueryFieldButton)findViewById(R.id.querySeverityButton);
+		buttonSeverity.configure(BugzillaDatabase.FIELD_NAME_SEVERITY, "Select Severity", querySeverity);
 
 		
 		
@@ -220,16 +222,30 @@ public class QueryActivity extends Activity {
 				query.name = queryName.getText().toString();
 				query.description = queryDescription.getText().toString();
 
+				/* assigned-to */
 				String value = queryAssignee.getText().toString();
 				if (!value.isEmpty())
 					query.constraints.add(new QueryConstraint(
 							BugzillaDatabase.FIELD_NAME_ASSIGNEE, value));
 
+				/* product */
+				value = queryProduct.getText().toString();
+				if (!value.isEmpty())
+					query.constraints.add(new QueryConstraint(
+							BugzillaDatabase.FIELD_NAME_PRODUCT, value));
+
+				/* status */
 				value = queryStatus.getText().toString();
-				if (queryStatus.length() > 0)
+				if (!value.isEmpty())
 					query.constraints.add(new QueryConstraint(
 							BugzillaDatabase.FIELD_NAME_STATUS, value));
 
+				/* severity */
+				value = querySeverity.getText().toString();
+				if (!value.isEmpty())
+					query.constraints.add(new QueryConstraint(
+							BugzillaDatabase.FIELD_NAME_SEVERITY, value));
+				
 				BugzillaApplication app = (BugzillaApplication) getApplication();
 				BugzillaServiceHelper helper = app.getBugzillaServiceHelper();
 

@@ -106,9 +106,48 @@ public class Bugzilla {
         return mErrorMessage;
     }
 
-    ArrayList<Bug> searchBugs(String assignedTo) {
+//    ArrayList<Bug> searchBugs(String assignedTo) {
+//
+//        Log.d(TAG, "searchBugs");
+//        // ArrayList<Bug> bugs = new ArrayList<Bug>();
+//        //
+//        // Map<String, Object> bugData = new HashMap<String, Object>();
+//        // BugFactory factory = new BugFactory();
+//        //
+//        // bugData.put("id", 12386);
+//        // bugData.put("product", "product 1");
+//        // bugData.put("component", "component 1");
+//        // bugData.put("summary", "summary 1");
+//        // bugData.put("version", "version 1");
+//        // Bug bug = factory.createBug(bugData);
+//        // bugs.add(bug);
+//        // return bugs;
+//
+//        try
+//        {
+//        	BugzillaSearch search = new BugzillaSearch();
+//        	
+//        	search.addParameter("assigned_to", assignedTo);
+//
+//            mBugzilla.executeMethod(search);
+//            
+//            return (ArrayList<Bug>) search.getSearchResults();
+//            
+//        } catch (BugzillaException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
+    ArrayList<Bug> searchBugs(ArrayList<QueryConstraint> constraints) {
+
+    	if (!isConnected())
+    		return null;
+    	
         Log.d(TAG, "searchBugs");
+        
         // ArrayList<Bug> bugs = new ArrayList<Bug>();
         //
         // Map<String, Object> bugData = new HashMap<String, Object>();
@@ -127,42 +166,40 @@ public class Bugzilla {
         {
         	BugzillaSearch search = new BugzillaSearch();
         	
-        	search.addParameter("assigned_to", assignedTo);
-
-            mBugzilla.executeMethod(search);
-            
-            return (ArrayList<Bug>) search.getSearchResults();
-            
-        } catch (BugzillaException e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    ArrayList<Bug> searchBugs(ArrayList<QueryConstraint> constraints) {
-
-    	if (!isConnected())
-    		return null;
-        Log.d(TAG, "searchBugs");
-        // ArrayList<Bug> bugs = new ArrayList<Bug>();
-        //
-        // Map<String, Object> bugData = new HashMap<String, Object>();
-        // BugFactory factory = new BugFactory();
-        //
-        // bugData.put("id", 12386);
-        // bugData.put("product", "product 1");
-        // bugData.put("component", "component 1");
-        // bugData.put("summary", "summary 1");
-        // bugData.put("version", "version 1");
-        // Bug bug = factory.createBug(bugData);
-        // bugs.add(bug);
-        // return bugs;
-
-        try
-        {
-        	BugzillaSearch search = new BugzillaSearch(constraints);
+          for (QueryConstraint constraint : constraints) {
+            	
+        	  String values[] = constraint.getValues();
+        	  if (values == null)
+        		  continue;
+        	  if (values.length == 0)
+        		  continue;
+        	  
+            	String parameterName = null;
+            	
+            	if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_PRODUCT))
+            		parameterName = "product";
+            	else if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_ASSIGNEE))
+            		parameterName = "assigned_to";
+                else if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_CREATOR))
+            		parameterName = "reporter";
+                else {
+                	BugzillaField field = mBugzFields.get(constraint.field);
+                	if (field != null)
+                		parameterName = field.bugzName;
+                }
+            	
+            	
+            	
+            	if (parameterName == null)
+            		continue;
+            	
+            	if (values.length > 1)
+            		search.addParameter(parameterName, values);
+            	else
+            		search.addParameter(parameterName, values[0]);
+            }
+        	
+        	
 
             mBugzilla.executeMethod(search);
             

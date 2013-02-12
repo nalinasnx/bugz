@@ -28,14 +28,23 @@ public class BugzillaSearch implements BugzillaMethod {
 	public BugzillaSearch() {
 		
 	}
-	public BugzillaSearch(ArrayList<QueryConstraint> constraints) {
-        for (QueryConstraint constraint : constraints) {
-        	params.put(constraint.field, constraint.value);
-        }
-	}
+//	public BugzillaSearch(ArrayList<QueryConstraint> constraints) {
+//		
+//		
+//        for (QueryConstraint constraint : constraints) {
+//        	params.put(constraint.field, constraint.value);
+//        }
+//        
+//        
+//	}
 	public void addParameter(String name, String value) {
 		params.put(name, value);
 	}
+	public void addParameter(String name, String[] values) {
+		params.put(name, values);
+	}
+	
+	
 	/**
 	 * Returns the {@link Bug Bugs} found by the query as a <code>List</code>
 	 * @return a {@link List} of {@link Bug Bugs} that match the query and limit

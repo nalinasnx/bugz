@@ -1,5 +1,10 @@
 package com.webaltry.bugz;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -36,5 +41,33 @@ public class QueryConstraint implements Parcelable {
             return new QueryConstraint[size];
         }
     };
+    
+    public String[] getValues() {
+    	
+    	if (value == null)
+    		return null;
+    	
+    	if (value.isEmpty())
+    		return null;
+    	
+    	//String[] values = new String[0];
+    	ArrayList<String> valuesList = new ArrayList<String>();
+    	StringTokenizer tokens = new StringTokenizer(value,",");
+		
+		while (tokens.hasMoreTokens()) {
+			String token = tokens.nextToken();
+			token = token.trim();
+			if (!token.isEmpty())
+				valuesList.add(token);
+		}
+		
+		if (valuesList.isEmpty())
+			return null;
+		
+		String[] values = new String[valuesList.size()];
+		values = valuesList.toArray(values);
+	    
+    	return values;
+    }
 
 }

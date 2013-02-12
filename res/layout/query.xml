@@ -110,7 +110,8 @@
               android:layout_weight="1"
               android:text="Status" />
          
-                    <LinearLayout
+          
+          <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_weight="1" >
@@ -131,7 +132,33 @@
                   />
               
           </LinearLayout>
+          
+          
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Severity" />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1" >
 
+              <MultiAutoCompleteTextView
+                  android:id="@+id/querySeverity"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1.39"
+                  android:ems="10" />
+
+              <com.webaltry.bugz.QueryFieldButton
+                  android:id="@+id/querySeverityButton"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="..."                  
+                  />
+          </LinearLayout>
+          
       </LinearLayout>
   </RelativeLayout>
     
