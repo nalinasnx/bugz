@@ -83,23 +83,35 @@ public class QueryActivity extends Activity {
 
 			ContentResolver resolver = this.getContentResolver();
 
-			/* get the query name from the database */
+			/* get the query definition from the database */
 			Cursor queryCursor = resolver.query(ContentUris.withAppendedId(
 					BugzillaProvider.URI_GET_QUERY, queryId), null, null, null,
 					null);
 			queryCursor.moveToFirst();
 
+			/* query name */
 			queryName.setText(queryCursor.getString(queryCursor
 					.getColumnIndex(BugzillaDatabase.FIELD_NAME_NAME)));
 
+			/* query description */
 			queryDescription.setText(queryCursor.getString(queryCursor
 					.getColumnIndex(BugzillaDatabase.FIELD_NAME_DESCRIPTION)));
 
-			queryAssignee.setText(queryCursor.getString(queryCursor
-					.getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE)));
+            /* query field: assigned-to */
+            queryAssignee.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE)));
 
-			queryStatus.setText(queryCursor.getString(queryCursor
-					.getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS)));
+            /* query field: product */
+            queryAssignee.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_PRODUCT)));
+
+            /* query field: status */
+            queryStatus.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS)));
+
+            /* query field: severity */
+            queryStatus.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_SEVERITY)));
 
 		} else {
 
@@ -117,101 +129,6 @@ public class QueryActivity extends Activity {
 			/* run the login activity */
 			startActivityForResult(new Intent(this, LoginActivity.class), 1);
 		}
-
-//		final Button queryStatusButton = (Button) findViewById(R.id.queryStatusButton);
-//		queryStatusButton.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//
-//				/* get the current text */
-//				Editable items = queryStatus.getText();
-//
-//				/* get current items */
-//				StringTokenizer tokens = new StringTokenizer(items.toString(),
-//						",");
-//				Set<String> currentValues = new HashSet<String>();
-//				while (tokens.hasMoreTokens()) {
-//					String token = tokens.nextToken();
-//					token = token.trim();
-//					if (!token.isEmpty())
-//						currentValues.add(token);
-//				}
-//				
-//				/* get available items */
-//				ArrayList<String> statusValues = bugz
-//						.getValues(BugzillaDatabase.FIELD_NAME_STATUS);
-//				
-//				
-//				int size = statusValues.size();
-//				boolean[] selected = new boolean[size];
-//				int index = 0;
-//				
-//				List<CharSequence> availableValues = new ArrayList<CharSequence>();
-//				for (String value : statusValues) {
-//					availableValues.add(value);
-//					
-//					selected[index] = currentValues.contains(value);
-//					index++;
-//				}
-//
-//				AlertDialog.Builder builder = new AlertDialog.Builder(
-//						QueryActivity.this);
-//
-//				builder.setTitle("Select Status")
-//						// Specify the list array, the items to be selected by
-//						// default (null for none),
-//						// and the listener through which to receive callbacks
-//						// when items are selected
-//						.setMultiChoiceItems(
-//								availableValues
-//										.toArray(new CharSequence[size]),
-//										selected,
-//								new DialogInterface.OnMultiChoiceClickListener() {
-//									@Override
-//									public void onClick(DialogInterface dialog,
-//											int which, boolean isChecked) {
-//										// if (isChecked) {
-//										// // If the user checked the item, add
-//										// it to the selected items
-//										// mSelectedItems.add(which);
-//										// } else if
-//										// (mSelectedItems.contains(which)) {
-//										// // Else, if the item is already in
-//										// the array, remove it
-//										// mSelectedItems.remove(Integer.valueOf(which));
-//										// }
-//									}
-//								})
-//
-//						// Set the action buttons
-//						.setPositiveButton("Ok",
-//								new DialogInterface.OnClickListener() {
-//									@Override
-//									public void onClick(DialogInterface dialog,
-//											int id) {
-//										// User clicked OK, so save the
-//										// mSelectedItems results somewhere
-//										// or return them to the component that
-//										// opened the dialog
-//										// ...
-//									}
-//								})
-//
-//						.setNegativeButton("Cancel",
-//								new DialogInterface.OnClickListener() {
-//									@Override
-//									public void onClick(DialogInterface dialog,
-//											int id) {
-//									}
-//								});
-//
-//				AlertDialog alert = builder.create();
-//				alert.show();
-//
-//			}
-//
-//		});
-//
-//		// return builder.create();
 
 		titleButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -299,10 +216,9 @@ public class QueryActivity extends Activity {
 		BugzillaApplication app = (BugzillaApplication) getApplication();
 		Bugzilla bugz = app.getBugzilla();
 
+		/* status */
 		final MultiAutoCompleteTextView queryStatus = (MultiAutoCompleteTextView) findViewById(R.id.queryStatus);
-
-		ArrayList<String> statusValues = bugz
-				.getValues(BugzillaDatabase.FIELD_NAME_STATUS);
+		ArrayList<String> statusValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_STATUS);
 		if (statusValues != null)
 			queryStatus.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_dropdown_item_1line, statusValues));
