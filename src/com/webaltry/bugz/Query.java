@@ -113,7 +113,7 @@ public class Query implements Parcelable {
             super(search_nothing);
 
             for (QueryConstraint constraint : constraints) {
-                altParams.put(constraint.field, constraint.value);
+                altParams.put(constraint.databaseFieldName, constraint.value);
             }
         }
 

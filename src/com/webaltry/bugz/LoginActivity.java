@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
+			
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);

@@ -15,7 +15,7 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
 
     private static final String TAG = BugzillaDatabase.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "bugz";
 
     public static final String TABLE_NAME_QUERIES = "queries";
@@ -58,15 +58,19 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_QUERIES =
             "CREATE TABLE " + TABLE_NAME_QUERIES + " (" +
                     FIELD_NAME_ID + " INTEGER PRIMARY KEY, " +
+            		
                     FIELD_NAME_NAME + " TEXT, " +
                     FIELD_NAME_DESCRIPTION + " TEXT, " +
-                    FIELD_NAME_COMPONENT + " TEXT, " +
-                    FIELD_NAME_PRODUCT + " TEXT, " +
+                    
                     FIELD_NAME_ASSIGNEE + " TEXT, " +
-                    FIELD_NAME_CREATOR + " TEXT, " +
+                    FIELD_NAME_PRODUCT + " TEXT, " +
+                    FIELD_NAME_COMPONENT + " TEXT, " +
                     FIELD_NAME_STATUS + " TEXT, " +
                     FIELD_NAME_PRIORITY + " TEXT, " +
+                    FIELD_NAME_SEVERITY + " TEXT, " +
                     FIELD_NAME_RESOLUTION + " TEXT, " +
+                    FIELD_NAME_CREATOR + " TEXT, " +
+                    
                     FIELD_NAME_LAST_RUN + " TEXT);";
 
     private static final String CREATE_TABLE_RESULTS =
@@ -79,16 +83,19 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_NAME_BUGS + " (" +
                     FIELD_NAME_ID + " INTEGER PRIMARY KEY, " +
                     FIELD_NAME_BUG_ID + " INTEGER NOT NULL UNIQUE, " +
-                    FIELD_NAME_COMPONENT + " TEXT, " +
-                    FIELD_NAME_PRODUCT + " TEXT, " +
-                    FIELD_NAME_SUMMARY + " TEXT, " +
+                    
                     FIELD_NAME_ASSIGNEE + " TEXT, " +
-                    FIELD_NAME_CREATOR + " TEXT, " +
-                    FIELD_NAME_CREATED + " TEXT, " +
-                    FIELD_NAME_MODIFIED + " TEXT, " +
+                    FIELD_NAME_PRODUCT + " TEXT, " +
+                    FIELD_NAME_COMPONENT + " TEXT, " +
                     FIELD_NAME_STATUS + " TEXT, " +
                     FIELD_NAME_PRIORITY + " TEXT, " +
-                    FIELD_NAME_RESOLUTION + " TEXT);";
+                    FIELD_NAME_SEVERITY + " TEXT, " +
+                    FIELD_NAME_RESOLUTION + " TEXT, " +
+                    FIELD_NAME_CREATOR + " TEXT, " +
+
+                    FIELD_NAME_SUMMARY + " TEXT, " +
+                    FIELD_NAME_CREATED + " TEXT, " +
+                    FIELD_NAME_MODIFIED + " TEXT);";
 
     BugzillaDatabase(Context context)
     {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class BugzillaField {
+	
 	public enum ValueType {
 		UNKNOWN, TEXT, LARGE_TEXT, DROP_DOWN, DATE_TIME
 	}

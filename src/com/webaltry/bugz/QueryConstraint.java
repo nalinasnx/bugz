@@ -9,7 +9,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class QueryConstraint implements Parcelable {
-    public String field;
+	
+    public String databaseFieldName;
     public String value;
     
     @Override
@@ -19,16 +20,16 @@ public class QueryConstraint implements Parcelable {
     }
     @Override
     public void writeToParcel(Parcel out, int arg1) {
-        out.writeString(field);
+        out.writeString(databaseFieldName);
         out.writeString(value);
     }
     public QueryConstraint(String field, String value) {
-        this.field = field;
+        this.databaseFieldName = field;
         this.value = value;
     }
     
     private QueryConstraint(Parcel in) {
-        field = in.readString();
+    	databaseFieldName = in.readString();
         value = in.readString();
     }
 

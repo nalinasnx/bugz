@@ -67,9 +67,7 @@ public class QueryActivity extends Activity {
 		queryStatus.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 		QueryFieldButton buttonSeverity = (QueryFieldButton)findViewById(R.id.querySeverityButton);
 		buttonSeverity.configure(BugzillaDatabase.FIELD_NAME_SEVERITY, "Select Severity", querySeverity);
-
-		
-		
+	
 		
 		updateAutoCompleteValues();
 
@@ -79,6 +77,8 @@ public class QueryActivity extends Activity {
 
 		if (editingQuery) {
 
+			titleCaption.setText("Edit Query");
+			
 			long queryId = getIntent().getLongExtra(QUERY_ID, 0);
 
 			ContentResolver resolver = this.getContentResolver();
@@ -102,7 +102,7 @@ public class QueryActivity extends Activity {
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE)));
 
             /* query field: product */
-            queryAssignee.setText(queryCursor.getString(queryCursor
+            queryProduct.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_PRODUCT)));
 
             /* query field: status */
@@ -110,7 +110,7 @@ public class QueryActivity extends Activity {
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS)));
 
             /* query field: severity */
-            queryStatus.setText(queryCursor.getString(queryCursor
+            querySeverity.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_SEVERITY)));
 
 		} else {
@@ -216,12 +216,26 @@ public class QueryActivity extends Activity {
 		BugzillaApplication app = (BugzillaApplication) getApplication();
 		Bugzilla bugz = app.getBugzilla();
 
+		/* product */
+		final MultiAutoCompleteTextView queryProduct = (MultiAutoCompleteTextView) findViewById(R.id.queryProduct);
+		ArrayList<String> productValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_PRODUCT);
+		if (productValues != null)
+			queryProduct.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_dropdown_item_1line, productValues));
+
 		/* status */
 		final MultiAutoCompleteTextView queryStatus = (MultiAutoCompleteTextView) findViewById(R.id.queryStatus);
 		ArrayList<String> statusValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_STATUS);
 		if (statusValues != null)
 			queryStatus.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_dropdown_item_1line, statusValues));
+
+		/* severity */
+		final MultiAutoCompleteTextView querySeverity = (MultiAutoCompleteTextView) findViewById(R.id.querySeverity);
+		ArrayList<String> severityValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_SEVERITY);
+		if (statusValues != null)
+			querySeverity.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_dropdown_item_1line, severityValues));
 
 	}
 }

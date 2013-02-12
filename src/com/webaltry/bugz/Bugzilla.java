@@ -26,7 +26,7 @@ public class Bugzilla {
     private BugzillaConnector mBugzilla;
    
     private String mErrorMessage;
-    private Map<String, BugzillaField> mBugzFields;
+    private Map<String, BugzillaField> mDatabaseToBugz;
     private ArrayList<Product> mBugzProducts;
     private ArrayList<String> mBugzPeople;
 
@@ -53,7 +53,7 @@ public class Bugzilla {
             /* get field information */
             BugzillaFields getLegal = new BugzillaFields();
             mBugzilla.executeMethod(getLegal);
-            mBugzFields = getLegal.getFields();
+            mDatabaseToBugz = getLegal.getDatabaseToBugz();
 
             /* get product information */
             mBugzProducts = new ArrayList<Product>();
@@ -106,62 +106,11 @@ public class Bugzilla {
         return mErrorMessage;
     }
 
-//    ArrayList<Bug> searchBugs(String assignedTo) {
-//
-//        Log.d(TAG, "searchBugs");
-//        // ArrayList<Bug> bugs = new ArrayList<Bug>();
-//        //
-//        // Map<String, Object> bugData = new HashMap<String, Object>();
-//        // BugFactory factory = new BugFactory();
-//        //
-//        // bugData.put("id", 12386);
-//        // bugData.put("product", "product 1");
-//        // bugData.put("component", "component 1");
-//        // bugData.put("summary", "summary 1");
-//        // bugData.put("version", "version 1");
-//        // Bug bug = factory.createBug(bugData);
-//        // bugs.add(bug);
-//        // return bugs;
-//
-//        try
-//        {
-//        	BugzillaSearch search = new BugzillaSearch();
-//        	
-//        	search.addParameter("assigned_to", assignedTo);
-//
-//            mBugzilla.executeMethod(search);
-//            
-//            return (ArrayList<Bug>) search.getSearchResults();
-//            
-//        } catch (BugzillaException e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
-
-    ArrayList<Bug> searchBugs(ArrayList<QueryConstraint> constraints) {
+    ArrayList<BugzillaBug> searchBugs(ArrayList<QueryConstraint> constraints) {
 
     	if (!isConnected())
     		return null;
     	
-        Log.d(TAG, "searchBugs");
-        
-        // ArrayList<Bug> bugs = new ArrayList<Bug>();
-        //
-        // Map<String, Object> bugData = new HashMap<String, Object>();
-        // BugFactory factory = new BugFactory();
-        //
-        // bugData.put("id", 12386);
-        // bugData.put("product", "product 1");
-        // bugData.put("component", "component 1");
-        // bugData.put("summary", "summary 1");
-        // bugData.put("version", "version 1");
-        // Bug bug = factory.createBug(bugData);
-        // bugs.add(bug);
-        // return bugs;
-
         try
         {
         	BugzillaSearch search = new BugzillaSearch();
@@ -176,14 +125,14 @@ public class Bugzilla {
         	  
             	String parameterName = null;
             	
-            	if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_PRODUCT))
+            	if (constraint.databaseFieldName.equals(BugzillaDatabase.FIELD_NAME_PRODUCT))
             		parameterName = "product";
-            	else if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_ASSIGNEE))
+            	else if (constraint.databaseFieldName.equals(BugzillaDatabase.FIELD_NAME_ASSIGNEE))
             		parameterName = "assigned_to";
-                else if (constraint.field.equals(BugzillaDatabase.FIELD_NAME_CREATOR))
+                else if (constraint.databaseFieldName.equals(BugzillaDatabase.FIELD_NAME_CREATOR))
             		parameterName = "reporter";
                 else {
-                	BugzillaField field = mBugzFields.get(constraint.field);
+                	BugzillaField field = mDatabaseToBugz.get(constraint.databaseFieldName);
                 	if (field != null)
                 		parameterName = field.bugzName;
                 }
@@ -203,7 +152,7 @@ public class Bugzilla {
 
             mBugzilla.executeMethod(search);
             
-            return (ArrayList<Bug>) search.getSearchResults();
+            return (ArrayList<BugzillaBug>) search.getSearchResults2();
             
         } catch (BugzillaException e) {
             e.printStackTrace();
@@ -219,15 +168,15 @@ public class Bugzilla {
     void disconnect() {
 
         mBugzilla = null;
-        mBugzFields = null;
+        mDatabaseToBugz = null;
         mBugzProducts = null;
         mBugzPeople = null;
     }
     
-    public ArrayList<String> getValues(String field) {
+    public ArrayList<String> getValues(String databaseFieldName) {
     	
     	/* product names handled specially */
-    	if (field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_PRODUCT)) {
+    	if (databaseFieldName.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_PRODUCT)) {
     		
     		if (mBugzProducts == null)
     			return null;
@@ -243,15 +192,15 @@ public class Bugzilla {
     	}
     	
     	/* people names handled specially */
-    	if (field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_ASSIGNEE) || field.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_CREATOR)) {
+    	if (databaseFieldName.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_ASSIGNEE) || databaseFieldName.equalsIgnoreCase(BugzillaDatabase.FIELD_NAME_CREATOR)) {
     		return mBugzPeople;
     	}
     	
     	/* all others come from bugz server */
-    	if (mBugzFields == null)
+    	if (mDatabaseToBugz == null)
     		return null;
     	
-    	BugzillaField bugzField = mBugzFields.get(field);
+    	BugzillaField bugzField = mDatabaseToBugz.get(databaseFieldName);
     	if (bugzField == null)
     		return null;
     	

@@ -31,7 +31,7 @@ public class BugzillaProcessor {
         values.put(BugzillaDatabase.FIELD_NAME_DESCRIPTION, query.description);
 
         for (QueryConstraint constraint : query.constraints) {
-            values.put(constraint.field, constraint.value);
+            values.put(constraint.databaseFieldName, constraint.value);
         }
 
         Uri uri = resolver.insert(BugzillaProvider.URI_ADD_QUERY, values);
@@ -57,7 +57,7 @@ public class BugzillaProcessor {
         values.put(BugzillaDatabase.FIELD_NAME_NAME, query.name);
         values.put(BugzillaDatabase.FIELD_NAME_DESCRIPTION, query.description);
         for (QueryConstraint constraint : query.constraints) {
-            values.put(constraint.field, constraint.value);
+            values.put(constraint.databaseFieldName, constraint.value);
         }
         
         resolver.update(BugzillaProvider.URI_UPDATE_QUERY, values, null,
@@ -111,7 +111,7 @@ public class BugzillaProcessor {
         	constraints.add(new QueryConstraint(BugzillaDatabase.FIELD_NAME_STATUS, value));
 
         Bugzilla bugzilla = app.getBugzilla();
-        ArrayList<Bug> bugs = bugzilla.searchBugs(constraints);
+        ArrayList<BugzillaBug> bugs = bugzilla.searchBugs(constraints);
 
         /* delete any existing records in "results" table */
         resolver.delete(ContentUris.withAppendedId(BugzillaProvider.URI_DELETE_RESULTS, queryId), null,
@@ -119,29 +119,20 @@ public class BugzillaProcessor {
 
         if (bugs != null) {
 
-            for (Bug bug : bugs) {
+            for (BugzillaBug bug : bugs) {
 
                 /* create entry in "results" table */
-                // queryId = query.id
-                // bugId = bug.getID
+
                 ContentValues values = new ContentValues();
                 values.put(BugzillaDatabase.FIELD_NAME_QUERY_ID, queryId);
                 values.put(BugzillaDatabase.FIELD_NAME_BUG_ID, bug.getID());
+                
                 resolver.insert(BugzillaProvider.URI_ADD_RESULT, values);
 
-                // some bugs may already exist, others may not
-                // TODO figure out update/insert
-
-                // create/update entry in "bugs" table
-                // bugId = bug.getID
-                // summary = bug.getSummary
-                // etc.
-
                 values.clear();
-                values.put(BugzillaDatabase.FIELD_NAME_BUG_ID, bug.getID());
-                values.put(BugzillaDatabase.FIELD_NAME_SUMMARY, bug.getSummary());
+                bug.getValues(values);
+                
                 resolver.insert(BugzillaProvider.URI_ADD_OR_REPLACE_BUG, values);
-
             }
         }
 

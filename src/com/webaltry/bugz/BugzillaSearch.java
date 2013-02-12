@@ -28,15 +28,7 @@ public class BugzillaSearch implements BugzillaMethod {
 	public BugzillaSearch() {
 		
 	}
-//	public BugzillaSearch(ArrayList<QueryConstraint> constraints) {
-//		
-//		
-//        for (QueryConstraint constraint : constraints) {
-//        	params.put(constraint.field, constraint.value);
-//        }
-//        
-//        
-//	}
+
 	public void addParameter(String name, String value) {
 		params.put(name, value);
 	}
@@ -50,15 +42,17 @@ public class BugzillaSearch implements BugzillaMethod {
 	 * @return a {@link List} of {@link Bug Bugs} that match the query and limit
 	 */
 	public List<Bug> getSearchResults() {
+		
 		List<Bug> results = new ArrayList<Bug>();
 		/*
 		 * The following is messy, but necessary due to how the returned XML document nests
 		 * Maps.
 		 */
-		if(hash.containsKey("bugs")) {
+		if (hash.containsKey("bugs")) {
+			
 			Object[] bugs = (Object[])hash.get("bugs");
 			
-			for(Object o : bugs) {
+			for (Object o : bugs) {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> bugMap = (HashMap<String, Object>)o;
 				//Handle version property for older Bugzillas which did not include it in the public portion of the hash
@@ -67,6 +61,39 @@ public class BugzillaSearch implements BugzillaMethod {
 					bugMap.put("version", internals.get("version"));
 				}
 				Bug bug = new BugFactory().createBug(bugMap);
+				results.add(bug);
+			}
+		}
+		return results;
+	}
+	
+	/**
+	 * Returns the {@link Bug Bugs} found by the query as a <code>List</code>
+	 * @return a {@link List} of {@link Bug Bugs} that match the query and limit
+	 */
+	public List<BugzillaBug> getSearchResults2() {
+		
+		List<BugzillaBug> results = new ArrayList<BugzillaBug>();
+		/*
+		 * The following is messy, but necessary due to how the returned XML document nests
+		 * Maps.
+		 */
+		if (hash.containsKey("bugs")) {
+			
+			Object[] bugs = (Object[])hash.get("bugs");
+			
+			for (Object o : bugs) {
+				
+				@SuppressWarnings("unchecked")
+				Map<String, Object> bugMap = (HashMap<String, Object>)o;
+				
+				//Handle version property for older Bugzillas which did not include it in the public portion of the hash
+				//if(!bugMap.containsKey("version")) {
+				//	Map<?, ?> internals = (Map<?, ?>) bugMap.get("internals");
+				//	bugMap.put("version", internals.get("version"));
+				//}
+				
+				BugzillaBug bug = new BugzillaBug(bugMap);
 				results.add(bug);
 			}
 		}

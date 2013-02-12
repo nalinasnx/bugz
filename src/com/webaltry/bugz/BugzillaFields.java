@@ -12,7 +12,23 @@ import com.j2bugzilla.base.Product;
 
 public class BugzillaFields implements BugzillaMethod {
 	
-	private final Map<String, BugzillaField> mFields = new HashMap<String, BugzillaField>();
+	public static final String BUGZ_FIELD_BUG_ID = "bug_id";	
+	public static final String BUGZ_FIELD_COMPONENT = "component";	
+	public static final String BUGZ_FIELD_PRODUCT = "product";	
+	public static final String BUGZ_FIELD_SHORT_DESCRIPTION = "short_desc";	
+	public static final String BUGZ_FIELD_LONG_DESCRIPTION = "longdesc";	
+	public static final String BUGZ_FIELD_ASSIGNED_TO = "assigned_to";	
+	public static final String BUGZ_FIELD_CREATOR = "reporter";	
+	public static final String BUGZ_FIELD_CREATED = "creation_ts";	
+	public static final String BUGZ_FIELD_MODIFIED = "delta_ts";	
+	public static final String BUGZ_FIELD_STATUS = "bug_status";	
+	public static final String BUGZ_FIELD_PRIORITY = "priority";	
+	public static final String BUGZ_FIELD_SEVERITY = "bug_severity";	
+	public static final String BUGZ_FIELD_RESOLUTION = "resolution";	
+	
+	
+	private final Map<String, BugzillaField> mDatabaseToBugz = new HashMap<String, BugzillaField>();
+	//private final Map<String, String> mBugzToDatabase = new HashMap<String, String>();
 
 	/**
 	 * The {@code GetLegalValues} class allows clients to query their
@@ -42,9 +58,13 @@ public class BugzillaFields implements BugzillaMethod {
 	public BugzillaFields() {
 	}
 
-	public Map<String, BugzillaField> getFields() {
-		return mFields;
+	public Map<String, BugzillaField> getDatabaseToBugz() {
+		return mDatabaseToBugz;
 	}
+
+	//public Map<String, String> getBugzToDatabase() {
+	//	return mBugzToDatabase;
+	//}
 
 	@Override
 	public void setResultMap(Map<Object, Object> hash) {
@@ -64,70 +84,83 @@ public class BugzillaFields implements BugzillaMethod {
 				
 				if (name != null) {
 					
-					if (name.equalsIgnoreCase("bug_id")) {
+					if (name.equalsIgnoreCase(BUGZ_FIELD_BUG_ID)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_BUG_ID, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_BUG_ID, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_BUG_ID);
 					}
-					else if (name.equalsIgnoreCase("component")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_COMPONENT)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_COMPONENT, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_COMPONENT, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_COMPONENT);
 					}
-					else if (name.equalsIgnoreCase("product")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_PRODUCT)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_PRODUCT, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_PRODUCT, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_PRODUCT);
 					}
-					else if (name.equalsIgnoreCase("short_desc")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_SHORT_DESCRIPTION)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_SUMMARY, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_SUMMARY, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_SUMMARY);
 					}
-					else if (name.equalsIgnoreCase("longdesc")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_LONG_DESCRIPTION)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_COMMENT, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_COMMENT, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_COMMENT);
 					}
-					else if (name.equalsIgnoreCase("assigned_to")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_ASSIGNED_TO)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_ASSIGNEE, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_ASSIGNEE, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_ASSIGNEE);
 					}
-					else if (name.equalsIgnoreCase("reporter")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_CREATOR)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_CREATOR, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_CREATOR, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_CREATOR);
 					}
-					else if (name.equalsIgnoreCase("creation_ts")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_CREATED)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_CREATED, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_CREATED, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_CREATED);
 					}
-					else if (name.equalsIgnoreCase("delta_ts")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_MODIFIED)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_MODIFIED, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_MODIFIED, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_MODIFIED);
 					}
-					else if (name.equalsIgnoreCase("bug_status")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_STATUS)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_STATUS, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_STATUS, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_STATUS);
 					}
-					else if (name.equalsIgnoreCase("priority")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_PRIORITY)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_PRIORITY, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_PRIORITY, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_PRIORITY);
 					}
-					else if (name.equalsIgnoreCase("bug_severity")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_SEVERITY)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_SEVERITY, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_SEVERITY, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_SEVERITY);
 					}
-					else if (name.equalsIgnoreCase("resolution")) {
+					else if (name.equalsIgnoreCase(BUGZ_FIELD_RESOLUTION)) {
 						
 						BugzillaField field = new BugzillaField(fieldDefinition);
-						mFields.put(BugzillaDatabase.FIELD_NAME_RESOLUTION, field);
+						mDatabaseToBugz.put(BugzillaDatabase.FIELD_NAME_RESOLUTION, field);
+						//mBugzToDatabase.put(name, BugzillaDatabase.FIELD_NAME_RESOLUTION);
 					}
 				}
 			}
