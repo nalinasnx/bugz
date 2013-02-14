@@ -15,7 +15,7 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
 
     private static final String TAG = BugzillaDatabase.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "bugz";
 
     public static final String TABLE_NAME_QUERIES = "queries";
@@ -29,31 +29,31 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
     public static final String FIELD_NAME_LAST_RUN = "last_run";
     
     // BUGZ: bug_id
-    public static final String FIELD_NAME_BUG_ID = "bugId";	
+    public static final String FIELD_NAME_BUG_ID = "BugId";	
     // BUGZ: component
-    public static final String FIELD_NAME_COMPONENT = "component";
+    public static final String FIELD_NAME_COMPONENT = "Component";
     // BUGZ:
-    public static final String FIELD_NAME_PRODUCT = "product";
+    public static final String FIELD_NAME_PRODUCT = "Product";
     // BUGZ: short_desc
-    public static final String FIELD_NAME_SUMMARY = "summary";
+    public static final String FIELD_NAME_SUMMARY = "Summary";
     // BUGZ: longdesc
-    public static final String FIELD_NAME_COMMENT = "comment";
+    public static final String FIELD_NAME_COMMENT = "Comment";
     // BUGZ:
-    public static final String FIELD_NAME_ASSIGNEE = "assigned_to";
+    public static final String FIELD_NAME_ASSIGNEE = "AssignedTo";
     // BUGZ:
-    public static final String FIELD_NAME_CREATOR = "creator";
+    public static final String FIELD_NAME_CREATOR = "CreatedBy";
     // BUGZ:
-    public static final String FIELD_NAME_CREATED = "creation_time";
+    public static final String FIELD_NAME_CREATED = "Created";
     // BUGZ:
-    public static final String FIELD_NAME_MODIFIED = "last_change_time";
+    public static final String FIELD_NAME_MODIFIED = "Changed";
     // BUGZ: bug_status
-    public static final String FIELD_NAME_STATUS = "status";
+    public static final String FIELD_NAME_STATUS = "Status";
     // BUGZ:
-    public static final String FIELD_NAME_PRIORITY = "priority";
+    public static final String FIELD_NAME_PRIORITY = "Priority";
     // BUGZ: bug_severity
-    public static final String FIELD_NAME_SEVERITY = "severity";
+    public static final String FIELD_NAME_SEVERITY = "Severity";
     // BUGZ: resolution
-    public static final String FIELD_NAME_RESOLUTION = "resolution";
+    public static final String FIELD_NAME_RESOLUTION = "Resolution";
 
     private static final String CREATE_TABLE_QUERIES =
             "CREATE TABLE " + TABLE_NAME_QUERIES + " (" +
@@ -149,6 +149,18 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
 
         qb.setTables(TABLE_NAME_QUERIES);
         qb.appendWhere(FIELD_NAME_ID + " = " + queryId);
+
+        Cursor c = qb.query(db, projection, selection, null, null, null, sortOrder);
+        return c;
+    }
+
+    public Cursor queryBug(String bugId, String[] projection, String selection, String sortOrder) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        qb.setTables(TABLE_NAME_BUGS);
+        qb.appendWhere(FIELD_NAME_BUG_ID + " = " + bugId);
 
         Cursor c = qb.query(db, projection, selection, null, null, null, sortOrder);
         return c;

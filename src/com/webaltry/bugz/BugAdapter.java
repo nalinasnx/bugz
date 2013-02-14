@@ -46,7 +46,7 @@ public class BugAdapter extends ArrayAdapter<Bug> {
             
             //name.setText(bug.getID());
              
-            TextView stuff = (TextView) view.findViewById(R.id.stuff);
+            TextView stuff = (TextView) view.findViewById(R.id.value);
             
             String bug_summary = bug.getSummary();
             if (bug_summary == null)

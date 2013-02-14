@@ -3,24 +3,16 @@ package com.webaltry.bugz;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
-import android.util.Log;
-
-import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
 import com.j2bugzilla.base.Product;
-import com.j2bugzilla.rpc.BugSearch;
 import com.j2bugzilla.rpc.GetAccessibleProducts;
-import com.j2bugzilla.rpc.GetLegalValues;
 import com.j2bugzilla.rpc.GetProduct;
 import com.j2bugzilla.rpc.LogIn;
 
 public class Bugzilla {
-    
-    private static final String TAG = Bugzilla.class.getSimpleName();
     
     /** for communicating with the bugzilla server */
     private BugzillaConnector mBugzilla;

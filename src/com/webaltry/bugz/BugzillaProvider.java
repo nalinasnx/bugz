@@ -159,6 +159,14 @@ public class BugzillaProvider extends ContentProvider {
                 return cursor;
             }
 
+            case CODE_GET_BUG: {
+                /* query the bugs table for a specific record */
+                String bugId = uri.getLastPathSegment();
+                Cursor cursor = mDatabase.queryBug(bugId, projection, selection, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return cursor;
+            }
+
             case CODE_GET_ALL_QUERIES: {
                 /* query the queries table */
                 Cursor cursor = mDatabase.queryQueries(projection, selection, sortOrder);

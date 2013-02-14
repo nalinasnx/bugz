@@ -62,11 +62,23 @@ public class QueryActivity extends Activity {
 		QueryFieldButton buttonStatus = (QueryFieldButton)findViewById(R.id.queryStatusButton);
 		buttonStatus.configure(BugzillaDatabase.FIELD_NAME_STATUS, "Select Status", queryStatus);
 		
+		/* priority */
+		final MultiAutoCompleteTextView queryPriority = (MultiAutoCompleteTextView) findViewById(R.id.queryPriority);
+		queryPriority.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+		QueryFieldButton buttonPriority = (QueryFieldButton)findViewById(R.id.queryPriorityButton);
+		buttonPriority.configure(BugzillaDatabase.FIELD_NAME_PRIORITY, "Select Priority", queryPriority);
+		
 		/* severity */
 		final MultiAutoCompleteTextView querySeverity = (MultiAutoCompleteTextView) findViewById(R.id.querySeverity);
 		queryStatus.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 		QueryFieldButton buttonSeverity = (QueryFieldButton)findViewById(R.id.querySeverityButton);
 		buttonSeverity.configure(BugzillaDatabase.FIELD_NAME_SEVERITY, "Select Severity", querySeverity);
+		
+		/* resolution */
+		final MultiAutoCompleteTextView queryResolution = (MultiAutoCompleteTextView) findViewById(R.id.queryResolution);
+		queryResolution.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+		QueryFieldButton buttonResolution = (QueryFieldButton)findViewById(R.id.queryResolutionButton);
+		buttonResolution.configure(BugzillaDatabase.FIELD_NAME_RESOLUTION, "Select Resolution", queryResolution);
 	
 		
 		updateAutoCompleteValues();
@@ -109,9 +121,17 @@ public class QueryActivity extends Activity {
             queryStatus.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS)));
 
+            /* query field: priority */
+            queryPriority.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_PRIORITY)));
+
             /* query field: severity */
             querySeverity.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_SEVERITY)));
+
+            /* query field: resolution */
+            queryResolution.setText(queryCursor.getString(queryCursor
+                    .getColumnIndex(BugzillaDatabase.FIELD_NAME_RESOLUTION)));
 
 		} else {
 
@@ -157,11 +177,23 @@ public class QueryActivity extends Activity {
 					query.constraints.add(new QueryConstraint(
 							BugzillaDatabase.FIELD_NAME_STATUS, value));
 
+				/* priority */
+				value = queryPriority.getText().toString();
+				if (!value.isEmpty())
+					query.constraints.add(new QueryConstraint(
+							BugzillaDatabase.FIELD_NAME_PRIORITY, value));
+
 				/* severity */
 				value = querySeverity.getText().toString();
 				if (!value.isEmpty())
 					query.constraints.add(new QueryConstraint(
 							BugzillaDatabase.FIELD_NAME_SEVERITY, value));
+
+				/* resolution */
+				value = queryResolution.getText().toString();
+				if (!value.isEmpty())
+					query.constraints.add(new QueryConstraint(
+							BugzillaDatabase.FIELD_NAME_RESOLUTION, value));
 				
 				BugzillaApplication app = (BugzillaApplication) getApplication();
 				BugzillaServiceHelper helper = app.getBugzillaServiceHelper();
@@ -204,11 +236,12 @@ public class QueryActivity extends Activity {
 			AlertDialog alert = builder.create();
 
 			alert.show();
+			
 		} else {
+			
 			/* after connecting, update auto-complete fields */
 			updateAutoCompleteValues();
 		}
-
 	}
 
 	private void updateAutoCompleteValues() {
@@ -230,12 +263,26 @@ public class QueryActivity extends Activity {
 			queryStatus.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_dropdown_item_1line, statusValues));
 
+		/* priority */
+		final MultiAutoCompleteTextView queryPriority = (MultiAutoCompleteTextView) findViewById(R.id.queryPriority);
+		ArrayList<String> priorityValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_PRIORITY);
+		if (priorityValues != null)
+			queryPriority.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_dropdown_item_1line, priorityValues));
+
 		/* severity */
 		final MultiAutoCompleteTextView querySeverity = (MultiAutoCompleteTextView) findViewById(R.id.querySeverity);
 		ArrayList<String> severityValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_SEVERITY);
 		if (statusValues != null)
 			querySeverity.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_dropdown_item_1line, severityValues));
+
+		/* resolution */
+		final MultiAutoCompleteTextView queryResolution = (MultiAutoCompleteTextView) findViewById(R.id.queryResolution);
+		ArrayList<String> resolutionValues = bugz.getValues(BugzillaDatabase.FIELD_NAME_RESOLUTION);
+		if (resolutionValues != null)
+			queryResolution.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_dropdown_item_1line, resolutionValues));
 
 	}
 }

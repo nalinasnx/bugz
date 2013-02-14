@@ -22,6 +22,10 @@ public class BugzillaService extends IntentService {
     public static final int SERVICE_TASK_CREATE_QUERY = 1;
     public static final int SERVICE_TASK_RUN_QUERY = 2;
     public static final int SERVICE_TASK_UPDATE_QUERY = 3;
+    
+    
+    public static final int SERVICE_RESULT_SUCCESS = 0;
+    public static final int SERVICE_RESULT_FAIL = 1;
 
     public BugzillaService() {
         super("BugzillaService");
@@ -35,8 +39,6 @@ public class BugzillaService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.d(TAG, "onHandleIntent");
-        
         BugzillaProcessor processor = new BugzillaProcessor();
         BugzillaApplication app = (BugzillaApplication) getApplication();
 
@@ -51,7 +53,6 @@ public class BugzillaService extends IntentService {
 
                 case SERVICE_TASK_CREATE_QUERY: {
                     
-                    Log.d(TAG, "SERVICE_TASK_CREATE_QUERY");
                     Query query = intent.getParcelableExtra(SERVICE_QUERY);
                     if (query != null) {
                         processor.createQuery(app, query, createCallback(intent));
@@ -72,7 +73,6 @@ public class BugzillaService extends IntentService {
                 }
                 case SERVICE_TASK_UPDATE_QUERY: {
                     
-                    Log.d(TAG, "SERVICE_TASK_UPDATE_QUERY");
                     Query query = intent.getParcelableExtra(SERVICE_QUERY);
                     if (query != null) {
                         processor.updateQuery(app, query, createCallback(intent));
@@ -84,7 +84,7 @@ public class BugzillaService extends IntentService {
         } catch (Exception e) {
 
             e.printStackTrace();
-            onRequestFail(1, intent);
+            onRequestFail(intent);
         }
     }
 
@@ -98,18 +98,19 @@ public class BugzillaService extends IntentService {
                 ResultReceiver receiver = intent.getParcelableExtra(SERVICE_CALLBACK);
                 Bundle resultData = new Bundle();
                 resultData.putParcelable(ORIGINAL_INTENT_EXTRA, intent);
-                receiver.send(0, resultData);
+                
+                receiver.send(resultCode, resultData);
             }
         };
         return callback;
     }
 
-    private void onRequestFail(int failCode, final Intent intent) {
+    private void onRequestFail(final Intent intent) {
 
         ResultReceiver receiver = intent.getParcelableExtra(SERVICE_CALLBACK);
         Bundle resultData = new Bundle();
         resultData.putParcelable(ORIGINAL_INTENT_EXTRA, intent);
-        receiver.send(failCode, resultData);
+        receiver.send(SERVICE_RESULT_FAIL, resultData);
 
     }
 

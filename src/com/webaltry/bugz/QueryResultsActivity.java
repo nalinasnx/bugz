@@ -1,10 +1,12 @@
 package com.webaltry.bugz;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -13,8 +15,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -25,6 +29,7 @@ public class QueryResultsActivity extends ListActivity {
 	public static final String QUERY_ID = "QUERY_ID";
 	private long mQueryId = 0;
 	private BroadcastReceiver mRequestReceiver;
+	//private SimpleCursorAdapter mAdapter;
 
 	private enum Status {
 		UNINITIALIZED, QUERY_PENDING, QUERY_SUCCEEDED, QUERY_FAILED
@@ -57,14 +62,16 @@ public class QueryResultsActivity extends ListActivity {
 		TextView titleCaption = (TextView) findViewById(R.id.title_caption2);
 		titleCaption.setText(queryCursor.getString(queryCursor
 				.getColumnIndex(BugzillaDatabase.FIELD_NAME_NAME)));
+		
+		
 
 		Cursor resultsCursor = resolver.query(ContentUris.withAppendedId(
 				BugzillaProvider.URI_GET_ALL_BUGS_OF_QUERY, mQueryId), null,
 				null, null, null);
 
-		startManagingCursor(resultsCursor);
+		startManagingCursor(resultsCursor); // transition to CursorLoader
 		
-		ListAdapter adapter = new SimpleCursorAdapter(this,
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				android.R.layout.two_line_list_item, resultsCursor,
 				new String[] { 
 					BugzillaDatabase.FIELD_NAME_SUMMARY,
@@ -91,6 +98,7 @@ public class QueryResultsActivity extends ListActivity {
 			public void onReceive(Context context, Intent intent) {
 
 				if (intent.hasExtra(BugzillaServiceHelper.TASK_QUERY_ID)) {
+					
 					long resultQueryId = intent.getLongExtra(
 							BugzillaServiceHelper.TASK_QUERY_ID, 0);
 
@@ -167,13 +175,71 @@ public class QueryResultsActivity extends ListActivity {
 		switch (item.getItemId()) {
 
 		case R.id.menu_refresh_query:
-			runQuery(true);
+			
+			/* make sure connected to server */
+			BugzillaApplication app = (BugzillaApplication) getApplication();
+			Bugzilla bugz = app.getBugzilla();
+			
+			if (!bugz.isConnected()) {
+				/* run the login activity */
+				startActivityForResult(new Intent(this, LoginActivity.class), 1);
+			} else {
+				runQuery(true);
+			}
 			return true;
+			
 		default:
+			
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        
+        super.onListItemClick(l, v, position, id);
+        
+        Cursor c = ((SimpleCursorAdapter)l.getAdapter()).getCursor();
+        c.moveToPosition(position);
+        
+        long bugId = c.getLong(c.getColumnIndex(BugzillaDatabase.FIELD_NAME_BUG_ID));
+        
+        Intent intent = new Intent(QueryResultsActivity.this, BugActivity.class);
+        intent.putExtra(BugActivity.BUG_ID, bugId);
+        startActivity(intent);
+                
+    }
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+		BugzillaApplication app = (BugzillaApplication) getApplication();
+		Bugzilla bugz = app.getBugzilla();
+
+		if (!bugz.isConnected()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+			builder.setTitle("Bugzilla");
+
+			builder.setMessage(
+					"Must connect to Bugzilla server to update query")
+					.setCancelable(false)
+					.setPositiveButton("Ok",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									finish();
+								}
+							});
+
+			AlertDialog alert = builder.create();
+
+			alert.show();
+		} else {
+			runQuery(true);
+		}
+
+	}
 	private void runQuery(boolean updateResults) {
 
 		BugzillaApplication app = (BugzillaApplication) getApplication();
@@ -212,6 +278,8 @@ public class QueryResultsActivity extends ListActivity {
 
 			case QUERY_SUCCEEDED:
 				message.setText("QUERY_SUCCEEDED");
+				//if (mAdapter != null)
+				//	mAdapter.getCursor().requery();
 				break;
 
 			case QUERY_FAILED:

@@ -34,6 +34,7 @@
         
         <activity android:name=".QueryResultsActivity"></activity>
         <activity android:name=".QueryActivity"></activity>
+        <activity android:name=".BugActivity"></activity>
         
         <service android:name=".BugzillaService" />
         
