@@ -18,8 +18,6 @@ public class BugzillaProcessor {
 	public void createQuery(BugzillaApplication app, Query query,
 			BugzillaProcessorCallback callback) {
 
-		Log.d(TAG, "createQuery");
-
 		if (query.idValid == true)
 			return;
 
@@ -45,18 +43,20 @@ public class BugzillaProcessor {
 	public void updateQuery(BugzillaApplication app, Query query,
 			BugzillaProcessorCallback callback) {
 
-		Log.d(TAG, "createQuery");
-
 		if (query.idValid == false)
 			return;
 
-		/* insert record in "queries" table */
 		ContentResolver resolver = app.getContentResolver();
 
+		/* delete any existing query results */
+		resolver.delete(ContentUris.withAppendedId(
+				BugzillaProvider.URI_DELETE_RESULTS, query.id), null, null);
+	
 		ContentValues values = new ContentValues();
 		values.put(BugzillaDatabase.FIELD_NAME_ID, query.id);
 		values.put(BugzillaDatabase.FIELD_NAME_NAME, query.name);
 		values.put(BugzillaDatabase.FIELD_NAME_DESCRIPTION, query.description);
+		
 		for (QueryConstraint constraint : query.constraints) {
 			values.put(constraint.databaseFieldName, constraint.value);
 		}
@@ -99,20 +99,23 @@ public class BugzillaProcessor {
 				null);
 		queryCursor.moveToFirst();
 
+		/* build collection of query constraints, name-value pairs */
 		ArrayList<QueryConstraint> constraints = new ArrayList<QueryConstraint>();
-
-		String value = queryCursor.getString(queryCursor
-				.getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE));
-		if (value != null && !value.isEmpty())
-			constraints.add(new QueryConstraint(
-					BugzillaDatabase.FIELD_NAME_ASSIGNEE, value));
-
-		value = queryCursor.getString(queryCursor
-				.getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS));
-		if (value != null && !value.isEmpty())
-			constraints.add(new QueryConstraint(
-					BugzillaDatabase.FIELD_NAME_STATUS, value));
-
+		
+		for (String field : BugzillaDatabase.queryFields) {
+			
+			int index = queryCursor.getColumnIndex(field);
+			if (index == -1)
+				continue;
+			
+			String value = queryCursor.getString(index);
+			if (value == null || value.isEmpty())
+				continue;
+			
+			constraints.add(new QueryConstraint(field, value));
+		}
+		
+		/* get the bugzilla server, have to be connected */
 		Bugzilla bugzilla = app.getBugzilla();
 
 		if (!bugzilla.isConnected()) {
@@ -120,11 +123,13 @@ public class BugzillaProcessor {
 			return;
 		}
 
-		/* delete any existing records in "results" table */
+		/* delete any existing query results */
 		resolver.delete(ContentUris.withAppendedId(
 				BugzillaProvider.URI_DELETE_RESULTS, queryId), null, null);
 
+		/* query the server for bugs */
 		ArrayList<BugzillaBug> bugs = bugzilla.searchBugs(constraints);
+		
 		if (bugs == null) {
 			callback.requestComplete(BugzillaService.SERVICE_RESULT_FAIL);
 			return;
@@ -148,5 +153,4 @@ public class BugzillaProcessor {
 
 		callback.requestComplete(BugzillaService.SERVICE_RESULT_SUCCESS);
 	}
-
 }

@@ -31,9 +31,7 @@ public class BugzillaServiceHelper {
 
     public void createQuery(Query query) {
 
-        Log.d(TAG, "createQuery");
-
-        if (query.getIdValid())
+         if (query.getIdValid())
             throw new IllegalArgumentException("Query already exists");
 
         /* create receiver of results from service */
@@ -58,9 +56,7 @@ public class BugzillaServiceHelper {
 
     public void updateQuery(Query query) {
 
-        Log.d(TAG, "updateQuery");
-
-        if (!query.getIdValid())
+         if (!query.getIdValid())
             throw new IllegalArgumentException("Query already exists");
 
         /* create receiver of results from service */

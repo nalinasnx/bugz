@@ -19,6 +19,7 @@ import android.widget.TextView;
 public class BugActivity extends ListActivity {
 
 	public static final String BUG_ID = "BUG_ID";
+	
 	private long mBugId = 0;
 
 	@Override
@@ -28,7 +29,8 @@ public class BugActivity extends ListActivity {
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.bug);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title2);
-
+		TextView titleCaption = (TextView) findViewById(R.id.title_caption2);
+		
 		/* get the bug id from the intent */
 		mBugId = getIntent().getLongExtra(BUG_ID, 0);
 
@@ -40,9 +42,14 @@ public class BugActivity extends ListActivity {
 		bugCursor.moveToFirst();
 
 		Vector<RowData> data = new Vector<RowData>();
-		data.add(new RowData(BugzillaDatabase.FIELD_NAME_BUG_ID, bugCursor
-				.getLong(bugCursor
-						.getColumnIndex(BugzillaDatabase.FIELD_NAME_BUG_ID))));
+		
+		//data.add(new RowData(BugzillaDatabase.FIELD_NAME_BUG_ID, bugCursor
+		//		.getLong(bugCursor
+		//				.getColumnIndex(BugzillaDatabase.FIELD_NAME_BUG_ID))));
+		
+		long bugId = bugCursor.getLong(bugCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_BUG_ID));
+		titleCaption.setText("Bug Id: " + Long.toString(bugId));
+		
 		data.add(new RowData(BugzillaDatabase.FIELD_NAME_COMPONENT, bugCursor
 				.getString(bugCursor
 						.getColumnIndex(BugzillaDatabase.FIELD_NAME_COMPONENT))));

@@ -37,6 +37,7 @@ public class QueryActivity extends Activity {
 
 		TextView titleCaption = (TextView) findViewById(R.id.title_caption);
 		titleCaption.setText("New Query");
+		
 		Button titleButton = (Button) findViewById(R.id.title_button);
 		titleButton.setText("Save");
 
@@ -88,8 +89,6 @@ public class QueryActivity extends Activity {
 		final boolean editingQuery = intent.hasExtra(QUERY_ID);
 
 		if (editingQuery) {
-
-			titleCaption.setText("Edit Query");
 			
 			long queryId = getIntent().getLongExtra(QUERY_ID, 0);
 
@@ -100,44 +99,53 @@ public class QueryActivity extends Activity {
 					BugzillaProvider.URI_GET_QUERY, queryId), null, null, null,
 					null);
 			queryCursor.moveToFirst();
+			
+			//String name = queryCursor.getString(queryCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_NAME));
+			
+			titleCaption.setText("Edit Query");
 
-			/* query name */
-			queryName.setText(queryCursor.getString(queryCursor
-					.getColumnIndex(BugzillaDatabase.FIELD_NAME_NAME)));
+			/* name */
+			queryName.setText(queryCursor.getString(queryCursor.getColumnIndex(BugzillaDatabase.FIELD_NAME_NAME)));
 
-			/* query description */
+			/* description */
 			queryDescription.setText(queryCursor.getString(queryCursor
 					.getColumnIndex(BugzillaDatabase.FIELD_NAME_DESCRIPTION)));
 
-            /* query field: assigned-to */
+			
+            /* assigned-to */
             queryAssignee.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_ASSIGNEE)));
 
-            /* query field: product */
+            /* product */
             queryProduct.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_PRODUCT)));
 
-            /* query field: status */
+            /* status */
             queryStatus.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_STATUS)));
 
-            /* query field: priority */
+            /* priority */
             queryPriority.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_PRIORITY)));
 
-            /* query field: severity */
+            /* severity */
             querySeverity.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_SEVERITY)));
 
-            /* query field: resolution */
+            /* resolution */
             queryResolution.setText(queryCursor.getString(queryCursor
                     .getColumnIndex(BugzillaDatabase.FIELD_NAME_RESOLUTION)));
 
 		} else {
 
-			queryName.setText("My First Query");
-			queryDescription.setText("This query rocks!");
+			queryName.setText("New Query");
+			queryDescription.setText("");
 			queryAssignee.setText("");
+			queryProduct.setText("");
+			queryStatus.setText("");
+			queryPriority.setText("");
+			querySeverity.setText("");
+			queryResolution.setText("");
 		}
 
 		/*
@@ -151,14 +159,14 @@ public class QueryActivity extends Activity {
 		}
 
 		titleButton.setOnClickListener(new View.OnClickListener() {
+			
 			public void onClick(View v) {
-
-				// Log.d(TAG, "Create Query");
 
 				Query query = new Query();
 				query.name = queryName.getText().toString();
 				query.description = queryDescription.getText().toString();
 
+				
 				/* assigned-to */
 				String value = queryAssignee.getText().toString();
 				if (!value.isEmpty())
@@ -195,16 +203,22 @@ public class QueryActivity extends Activity {
 					query.constraints.add(new QueryConstraint(
 							BugzillaDatabase.FIELD_NAME_RESOLUTION, value));
 				
+				
 				BugzillaApplication app = (BugzillaApplication) getApplication();
 				BugzillaServiceHelper helper = app.getBugzillaServiceHelper();
 
 				if (editingQuery) {
+					
 					query.id = getIntent().getLongExtra(QUERY_ID, 0);
 					query.idValid = true;
 					helper.updateQuery(query);
+					
 				} else {
+					
 					helper.createQuery(query);
 				}
+				
+				/* end the new/edit query activity */
 				finish();
 
 			}

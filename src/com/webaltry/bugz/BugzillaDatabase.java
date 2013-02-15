@@ -97,6 +97,23 @@ public class BugzillaDatabase extends SQLiteOpenHelper {
                     FIELD_NAME_CREATED + " TEXT, " +
                     FIELD_NAME_MODIFIED + " TEXT);";
 
+    public static String[] queryFields = new String[] {
+    	FIELD_NAME_ASSIGNEE, 
+    	FIELD_NAME_PRODUCT, 
+    	FIELD_NAME_COMPONENT,
+    	FIELD_NAME_STATUS,
+    	FIELD_NAME_PRIORITY,
+    	FIELD_NAME_SEVERITY,
+    	FIELD_NAME_RESOLUTION,
+    	FIELD_NAME_CREATOR,
+    	};
+    
+//    static List<String> getQueryFields() {
+//    	
+//    	List<String> strings = new ArrayList<String>();
+//    	
+//    }
+//    
     BugzillaDatabase(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

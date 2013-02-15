@@ -24,12 +24,9 @@ import android.widget.TextView;
 
 public class QueryResultsActivity extends ListActivity {
 
-	private static final String TAG = QueryResultsActivity.class
-			.getSimpleName();
 	public static final String QUERY_ID = "QUERY_ID";
 	private long mQueryId = 0;
 	private BroadcastReceiver mRequestReceiver;
-	//private SimpleCursorAdapter mAdapter;
 
 	private enum Status {
 		UNINITIALIZED, QUERY_PENDING, QUERY_SUCCEEDED, QUERY_FAILED
@@ -88,8 +85,6 @@ public class QueryResultsActivity extends ListActivity {
 		super.onResume();
 
 		/* get data if it exists */
-		Log.d(TAG, "onResume");
-
 		IntentFilter filter = new IntentFilter(
 				BugzillaServiceHelper.TASK_RUN_QUERY);
 		mRequestReceiver = new BroadcastReceiver() {
@@ -102,20 +97,14 @@ public class QueryResultsActivity extends ListActivity {
 					long resultQueryId = intent.getLongExtra(
 							BugzillaServiceHelper.TASK_QUERY_ID, 0);
 
-					Log.d(TAG, "Received intent " + intent.getAction()
-							+ ", query ID " + resultQueryId);
-
 					if (resultQueryId == mQueryId) {
 
 						int resultCode = intent.getIntExtra(
 								BugzillaServiceHelper.TASK_RESULT_CODE, 0);
 
-						Log.d(TAG, "Result code = " + resultCode);
-
 						if (resultCode == 0) {
 
 							/* show data */
-							Log.d(TAG, "Updating UI with new data");
 							setStatus(Status.QUERY_SUCCEEDED);
 
 						} else {
@@ -144,8 +133,6 @@ public class QueryResultsActivity extends ListActivity {
 
 		super.onPause();
 
-		Log.d(TAG, "onPause");
-
 		// Unregister for broadcast
 		if (mRequestReceiver != null) {
 
@@ -158,7 +145,6 @@ public class QueryResultsActivity extends ListActivity {
 
 			} catch (IllegalArgumentException e) {
 
-				Log.e(TAG, e.getLocalizedMessage(), e);
 			}
 		}
 	}

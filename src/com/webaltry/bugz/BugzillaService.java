@@ -23,8 +23,7 @@ public class BugzillaService extends IntentService {
     public static final int SERVICE_TASK_RUN_QUERY = 2;
     public static final int SERVICE_TASK_UPDATE_QUERY = 3;
     
-    
-    public static final int SERVICE_RESULT_SUCCESS = 0;
+        public static final int SERVICE_RESULT_SUCCESS = 0;
     public static final int SERVICE_RESULT_FAIL = 1;
 
     public BugzillaService() {
